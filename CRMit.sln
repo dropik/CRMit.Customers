@@ -1,0 +1,36 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 16
+VisualStudioVersion = 16.0.31019.35
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{40BFF5AE-537E-4306-B1B4-5149A131E506}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMit.Customers", "src\CRMit.Customers\CRMit.Customers.csproj", "{FE69DE6A-C6E8-444E-AE53-B0448CC42A18}"
+EndProject
+Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3B29021C-E0AB-420C-9DB1-C39A37A5CB63}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{FE69DE6A-C6E8-444E-AE53-B0448CC42A18}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FE69DE6A-C6E8-444E-AE53-B0448CC42A18}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FE69DE6A-C6E8-444E-AE53-B0448CC42A18}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FE69DE6A-C6E8-444E-AE53-B0448CC42A18}.Release|Any CPU.Build.0 = Release|Any CPU
+		{3B29021C-E0AB-420C-9DB1-C39A37A5CB63}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{3B29021C-E0AB-420C-9DB1-C39A37A5CB63}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{3B29021C-E0AB-420C-9DB1-C39A37A5CB63}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{3B29021C-E0AB-420C-9DB1-C39A37A5CB63}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{FE69DE6A-C6E8-444E-AE53-B0448CC42A18} = {40BFF5AE-537E-4306-B1B4-5149A131E506}
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {1651E1C5-0F6B-43FA-9558-91800C425CD2}
+	EndGlobalSection
+EndGlobal
