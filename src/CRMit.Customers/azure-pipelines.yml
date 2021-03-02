@@ -1,15 +1,22 @@
 pr:
   paths:
     include:
-    - "src/CRMit.Customers/*"
-    - "test/unittest/CRMit.Tests.Customers/*"
+    - "src/$(projectName)/*"
+    - "test/unittest/$(projectName).UnitTests/*"
 
 
 jobs:
   - job: unittest
     displayName: Unit Testing
     steps:
+      - task: UseDotNet@2
+        inputs:
+          version: '5.0.x'
+
       - task: DotNetCoreCLI@2
         inputs:
           command: 'test'
-          projects: 'test/unittest/CRMit.Tests.Customers/CRMit.Tests.Customers.csproj'
+          arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/test/TestResults/Coverage/$(projectName)/'
+          publishTestResults: true
+          projects: 'test/unittest/$(projectName).UnitTests/$(projectName).UnitTests.csproj'
+          
