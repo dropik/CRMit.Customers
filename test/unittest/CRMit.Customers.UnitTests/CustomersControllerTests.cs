@@ -52,7 +52,7 @@ namespace CRMit.Customers
         }
 
         [Test]
-        public async Task TestAllCustomersObtained()
+        public async Task TestGetList()
         {
             var result = (await customersController.GetListAsync()).Result as JsonResult;
             var list = result.Value as IEnumerable<Customer>;
@@ -60,7 +60,7 @@ namespace CRMit.Customers
         }
 
         [Test]
-        public async Task TestCustomerObtained()
+        public async Task TestGetCustomer()
         {
             var result = (await customersController.GetCustomerAsync(1)).Result as JsonResult;
             var customer = result.Value as Customer;
@@ -68,21 +68,14 @@ namespace CRMit.Customers
         }
 
         [Test]
-        public async Task TestIfCustomerIsNotPresent()
+        public async Task TestGetCustomerIfNotInDB()
         {
             var result = (await customersController.GetCustomerAsync(4)).Result as NotFoundResult;
             Assert.That(result, Is.Not.Null);
         }
 
         [Test]
-        public async Task TestOnNegativeId()
-        {
-            var result = (await customersController.GetCustomerAsync(-1)).Result as BadRequestResult;
-            Assert.That(result, Is.Not.Null);
-        }
-
-        [Test]
-        public async Task TestCustomerCreated()
+        public async Task TestCreateCustomer()
         {
             using var context = new CustomersDbContext(dbContextOptions);
             var newCustomer = new Customer { Id = 3, Name = "Petya", Email = "petya.example@gmail.com" };
@@ -95,7 +88,7 @@ namespace CRMit.Customers
         }
 
         [Test]
-        public async Task TestCustomerCreatedIfIdNotProvided()
+        public async Task TestCreateCustomerIfIdNotProvided()
         {
             using var context = new CustomersDbContext(dbContextOptions);
             var newCustomer = new Customer { Name = "Petya", Email = "petya.example@gmail.com" };
@@ -108,13 +101,18 @@ namespace CRMit.Customers
         }
 
         [Test]
-        public async Task TestOnAttemptToAddCustomerWithNegativeId()
+        public async Task TestCreateCustomerWithNegativeId()
         {
-            using var context = new CustomersDbContext(dbContextOptions);
             var newCustomer = new Customer { Id = -1, Name = "Petya", Email = "petya.example@gmail.com" };
-            
             var result = await customersController.CreateCustomerAsync(newCustomer) as BadRequestResult;
+            Assert.That(result, Is.Not.Null);
+        }
 
+        [Test]
+        public async Task TestCreateCustomerWithKeyDuplication()
+        {
+            var newCustomer = new Customer { Id = 2 };
+            var result = await customersController.CreateCustomerAsync(newCustomer) as BadRequestResult;
             Assert.That(result, Is.Not.Null);
         }
     }

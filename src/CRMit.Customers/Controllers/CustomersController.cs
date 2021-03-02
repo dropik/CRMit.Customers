@@ -27,7 +27,15 @@ namespace CRMit.Customers.Controllers
             }
 
             await context.AddAsync(customer);
-            await context.SaveChangesAsync();
+
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return new BadRequestResult();
+            }
 
             return new OkResult();
         }
@@ -39,13 +47,9 @@ namespace CRMit.Customers.Controllers
             return new JsonResult(customers);
         }
 
-        [HttpGet("{id:int}")]
+        [HttpGet("{id}")]
         public async Task<ActionResult<Customer>> GetCustomerAsync(int id)
         {
-            if (id < 1)
-            {
-                return new BadRequestResult();
-            }
             var result = await context.FindAsync<Customer>(id);
             if (result == null)
             {
