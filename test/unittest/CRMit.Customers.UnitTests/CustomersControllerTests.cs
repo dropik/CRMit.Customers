@@ -1,10 +1,10 @@
 using CRMit.Customers.Controllers;
 using CRMit.Customers.Models;
+using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web.Http.Results;
 
 namespace CRMit.Customers
 {
@@ -39,28 +39,30 @@ namespace CRMit.Customers
         [Test]
         public async Task TestAllCustomersObtained()
         {
-            var result = await customersController.ListAsync() as JsonResult<IEnumerable<Customer>>;
-            CollectionAssert.AreEqual(customers, result.Content);
+            var result = (await customersController.GetListAsync()).Result as JsonResult;
+            var list = result.Value as IEnumerable<Customer>;
+            CollectionAssert.AreEqual(customers, list);
         }
 
         [Test]
         public async Task TestCustomerObtained()
         {
-            var result = await customersController.GetCustomerAsync(1) as JsonResult<Customer>;
-            Assert.That(result.Content.Name, Is.EqualTo("Ivan"));
+            var result = (await customersController.GetCustomerAsync(1)).Result as JsonResult;
+            var customer = result.Value as Customer;
+            Assert.That(customer.Name, Is.EqualTo("Ivan"));
         }
 
         [Test]
         public async Task TestIfCustomerIsNotPresent()
         {
-            var result = await customersController.GetCustomerAsync(4) as NotFoundResult;
+            var result = (await customersController.GetCustomerAsync(4)).Result as NotFoundResult;
             Assert.That(result, Is.Not.Null);
         }
 
         [Test]
         public async Task TestOnNegativeId()
         {
-            var result = await customersController.GetCustomerAsync(-1) as BadRequestResult;
+            var result = (await customersController.GetCustomerAsync(-1)).Result as BadRequestResult;
             Assert.That(result, Is.Not.Null);
         }
     }

@@ -1,11 +1,14 @@
 ﻿using CRMit.Customers.Models;
+using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
+using System.Collections.Generic;
 using System.Threading.Tasks;
-using System.Web.Http;
 
 namespace CRMit.Customers.Controllers
 {
-    [RoutePrefix("api/v1/[controller]")]
-    public class CustomersController : ApiController
+    [Route("api/v1/[controller]")]
+    [ApiController]
+    public class CustomersController : ControllerBase
     {
         private readonly CustomersDbContext context;
 
@@ -14,17 +17,26 @@ namespace CRMit.Customers.Controllers
             this.context = context;
         }
 
-        [Route("")]
-        public async Task<IHttpActionResult> ListAsync()
+        [HttpGet("")]
+        public async Task<ActionResult<IEnumerable<Customer>>> GetListAsync()
         {
-            return default;
+            var customers = await context.Customers.ToListAsync();
+            return new JsonResult(customers);
         }
 
-        [Route("{id:int}")]
-        public async Task<IHttpActionResult> GetCustomerAsync(int id)
+        [HttpGet("{id:int}")]
+        public async Task<ActionResult<Customer>> GetCustomerAsync(int id)
         {
+            if (id < 1)
+            {
+                return new BadRequestResult();
+            }
             var result = await context.FindAsync<Customer>(id);
-            return Json(result);
+            if (result == null)
+            {
+                return new NotFoundResult();
+            }
+            return new JsonResult(result);
         }
     }
 }
