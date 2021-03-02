@@ -1,0 +1,7 @@
+﻿pr:
+  paths:
+    include:
+    - src/CRMit.Customers/*
+
+steps:
+  - script: echo Pipeline Works
