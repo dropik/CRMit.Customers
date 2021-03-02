@@ -1,8 +1,14 @@
 pr:
   paths:
     include:
-    - "src/$(projectName)/*"
-    - "test/unittest/$(projectName).UnitTests/*"
+    - "src/CRMit.Customers/*"
+    - "test/unittest/CRMit.Customers.UnitTests/*"
+
+variables:
+  - name: buildConfiguration
+    value: Debug
+  - name: projectName
+    value: CRMit.Customers
 
 
 jobs:
