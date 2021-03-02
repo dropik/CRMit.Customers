@@ -6,7 +6,7 @@ variables:
     value: CRMit.Customers
 
   - name: coverageExclude
-    value: "[*Tests]*,[*]*Startup,[*]*Program,[*]*DbContext,[*]*Models*"
+    value: '[*Tests]*,[*]*Startup,[*]*Program,[*]*DbContext,[*]*Models*'
 
 
 jobs:
