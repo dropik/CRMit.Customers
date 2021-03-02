@@ -70,8 +70,8 @@ namespace CRMit.Customers
         [Test]
         public async Task TestGetCustomerIfNotInDB()
         {
-            var result = (await customersController.GetCustomerAsync(4)).Result as NotFoundResult;
-            Assert.That(result, Is.Not.Null);
+            var result = (await customersController.GetCustomerAsync(4)).Result;
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }
 
         [Test]
@@ -80,9 +80,9 @@ namespace CRMit.Customers
             using var context = new CustomersDbContext(dbContextOptions);
             var newCustomer = new Customer { Id = 3, Name = "Petya", Email = "petya.example@gmail.com" };
             
-            var result = await customersController.CreateCustomerAsync(newCustomer) as OkResult;
+            var result = await customersController.CreateCustomerAsync(newCustomer);
 
-            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf<OkResult>());
             var addedCustomer = await context.FindAsync<Customer>(3);
             Assert.That(addedCustomer, Is.EqualTo(newCustomer));
         }
@@ -93,9 +93,9 @@ namespace CRMit.Customers
             using var context = new CustomersDbContext(dbContextOptions);
             var newCustomer = new Customer { Name = "Petya", Email = "petya.example@gmail.com" };
             
-            var result = await customersController.CreateCustomerAsync(newCustomer) as OkResult;
+            var result = await customersController.CreateCustomerAsync(newCustomer);
 
-            Assert.That(result, Is.Not.Null);
+            Assert.That(result, Is.InstanceOf<OkResult>());
             var addedCustomer = await context.FindAsync<Customer>(3);
             Assert.That(addedCustomer, Is.EqualTo(newCustomer));
         }
@@ -104,16 +104,43 @@ namespace CRMit.Customers
         public async Task TestCreateCustomerWithNegativeId()
         {
             var newCustomer = new Customer { Id = -1, Name = "Petya", Email = "petya.example@gmail.com" };
-            var result = await customersController.CreateCustomerAsync(newCustomer) as BadRequestResult;
-            Assert.That(result, Is.Not.Null);
+            var result = await customersController.CreateCustomerAsync(newCustomer);
+            Assert.That(result, Is.InstanceOf<BadRequestResult>());
         }
 
         [Test]
         public async Task TestCreateCustomerWithKeyDuplication()
         {
             var newCustomer = new Customer { Id = 2 };
-            var result = await customersController.CreateCustomerAsync(newCustomer) as BadRequestResult;
-            Assert.That(result, Is.Not.Null);
+            var result = await customersController.CreateCustomerAsync(newCustomer);
+            Assert.That(result, Is.InstanceOf<BadRequestResult>());
+        }
+
+        [Test]
+        public async Task TestUpdateCustomer()
+        {
+            using var context = new CustomersDbContext(dbContextOptions);
+            var newCustomer = new Customer { Id = 2, Name = "Petya", Email = "petya.example@gmail.com" };
+
+            var result = await customersController.UpdateCustomerAsync(2, newCustomer);
+            Assert.That(result, Is.InstanceOf<OkResult>());
+            Assert.That(context.Find<Customer>(2), Is.EqualTo(newCustomer));
+        }
+
+        [Test]
+        public async Task TestUpdateCustomerIfNotExists()
+        {
+            var newCustomer = new Customer { Id = 3 };
+            var result = await customersController.UpdateCustomerAsync(3, newCustomer);
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
+        }
+
+        [Test]
+        public async Task TestUpdateCustomerOnIdMismatch()
+        {
+            var newCustomer = new Customer { Id = 2 };
+            var result = await customersController.UpdateCustomerAsync(1, newCustomer);
+            Assert.That(result, Is.InstanceOf<BadRequestResult>());
         }
     }
 }

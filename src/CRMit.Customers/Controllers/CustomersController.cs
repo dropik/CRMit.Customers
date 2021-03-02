@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CRMit.Customers.Controllers
@@ -26,10 +27,9 @@ namespace CRMit.Customers.Controllers
                 return new BadRequestResult();
             }
 
-            await context.AddAsync(customer);
-
             try
             {
+                await context.AddAsync(customer);
                 await context.SaveChangesAsync();
             }
             catch (Exception)
@@ -56,6 +56,27 @@ namespace CRMit.Customers.Controllers
                 return new NotFoundResult();
             }
             return new JsonResult(result);
+        }
+
+        [HttpPut("{id}")]
+        public async Task<IActionResult> UpdateCustomerAsync(int id, Customer customer)
+        {
+            if (id != customer.Id)
+            {
+                return new BadRequestResult();
+            }
+
+            if (context.Customers.Any(c => c.Id == id))
+            {
+                context.Update(customer);
+                await context.SaveChangesAsync();
+            }
+            else
+            {
+                return new NotFoundResult();
+            }
+
+            return new OkResult();
         }
     }
 }
