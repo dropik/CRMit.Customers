@@ -5,6 +5,9 @@ variables:
   - name: projectName
     value: CRMit.Customers
 
+  - name: coverageExclude
+    value: "[*Tests]*,[*Startup],[*Program],[*DbContext],[*Models]*"
+
 
 jobs:
   - job: unittest
