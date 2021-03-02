@@ -20,7 +20,7 @@ jobs:
       - task: DotNetCoreCLI@2
         inputs:
           command: 'test'
-          arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/test/TestResults/Coverage/ /p:Exclude="$(coverageExclude)"'
+          arguments: '--configuration $(buildConfiguration) /p:CollectCoverage=true /p:CoverletOutputFormat=cobertura /p:CoverletOutput=$(Build.SourcesDirectory)/test/TestResults/Coverage/ /p:Exclude=\"$(coverageExclude)\"'
           publishTestResults: true
           projects: 'test/unittest/$(projectName).UnitTests/$(projectName).UnitTests.csproj'
 
