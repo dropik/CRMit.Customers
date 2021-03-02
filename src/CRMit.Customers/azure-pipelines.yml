@@ -1,7 +1,15 @@
 pr:
   paths:
     include:
-    - src/CRMit.Customers/*
+    - "src/CRMit.Customers/*"
+    - "test/unittest/CRMit.Tests.Customers/*"
 
-steps:
-  - script: echo Pipeline Works
+
+jobs:
+  - job: unittest
+    displayName: Unit Testing
+    steps:
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: 'test'
+          projects: 'test/unittest/CRMit.Tests.Customers/CRMit.Tests.Customers.csproj'
