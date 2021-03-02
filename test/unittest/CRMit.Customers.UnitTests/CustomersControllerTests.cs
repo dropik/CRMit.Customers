@@ -3,8 +3,8 @@ using CRMit.Customers.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
-using System;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 
 namespace CRMit.Customers
@@ -17,23 +17,18 @@ namespace CRMit.Customers
             new Customer { Id = 1, Name = "Ivan", Email = "ivan.example@gmail.com" },
             new Customer { Id = 2, Name = "Vasia", Email = "vasia.example@gmail.com" }
         };
-
-        private DbContextOptions<CustomersDbContext> dbContextOptions = new DbContextOptionsBuilder<CustomersDbContext>()
+        private readonly DbContextOptions<CustomersDbContext> dbContextOptions = new DbContextOptionsBuilder<CustomersDbContext>()
             .UseInMemoryDatabase(databaseName: "CustomersDB")
             .Options;
+
         private CustomersController customersController;
 
-        [OneTimeSetUp]
-        public async Task OneTimeSetup()
+        [SetUp]
+        public async Task Setup()
         {
             using var context = new CustomersDbContext(dbContextOptions);
             await context.AddRangeAsync(customers);
             await context.SaveChangesAsync();
-        }
-
-        [SetUp]
-        public void Setup()
-        {
             customersController = new CustomersController(new CustomersDbContext(dbContextOptions));
         }
 
@@ -41,14 +36,7 @@ namespace CRMit.Customers
         public async Task TearDown()
         {
             using var context = new CustomersDbContext(dbContextOptions);
-            var newCustomer = new Customer { Id = 3 };
-            context.Attach(newCustomer);
-            context.Remove(newCustomer);
-            try
-            {
-                await context.SaveChangesAsync();
-            }
-            catch (Exception) { }
+            await context.Database.EnsureDeletedAsync();
         }
 
         [Test]
@@ -61,7 +49,7 @@ namespace CRMit.Customers
             Assert.That(result.ActionName, Is.EqualTo("GetCustomerAsync"));
             Assert.That(result.RouteValues["id"], Is.EqualTo(3));
             Assert.That(result.Value, Is.EqualTo(newCustomer));
-            var addedCustomer = await context.FindAsync<Customer>(3);
+            var addedCustomer = await context.FindAsync<Customer>((long)3);
             Assert.That(addedCustomer, Is.EqualTo(newCustomer));
         }
 
@@ -74,7 +62,7 @@ namespace CRMit.Customers
             var result = (await customersController.CreateCustomerAsync(newCustomer)).Result;
 
             Assert.That(result, Is.InstanceOf<CreatedAtActionResult>());
-            var addedCustomer = await context.FindAsync<Customer>(3);
+            var addedCustomer = await context.FindAsync<Customer>((long)3);
             Assert.That(addedCustomer, Is.EqualTo(newCustomer));
         }
 
@@ -125,7 +113,7 @@ namespace CRMit.Customers
 
             var result = await customersController.UpdateCustomerAsync(2, newCustomer);
             Assert.That(result, Is.InstanceOf<OkResult>());
-            Assert.That(context.Find<Customer>(2), Is.EqualTo(newCustomer));
+            Assert.That(context.Find<Customer>((long)2), Is.EqualTo(newCustomer));
         }
 
         [Test]
@@ -142,6 +130,27 @@ namespace CRMit.Customers
             var newCustomer = new Customer { Id = 2 };
             var result = await customersController.UpdateCustomerAsync(1, newCustomer);
             Assert.That(result, Is.InstanceOf<BadRequestResult>());
+        }
+
+        [Test]
+        public async Task TestDeleteCustomer()
+        {
+            using var context = new CustomersDbContext(dbContextOptions);
+            var id = 2;
+
+            var result = await customersController.DeleteCustomerAsync(id);
+
+            Assert.That(result, Is.InstanceOf<OkResult>());
+            Assert.That(context.Customers.Any(c => c.Id == id), Is.False);
+        }
+
+        [Test]
+        public async Task TestDeleteCustomerOnMissingCustomer()
+        {
+            using var context = new CustomersDbContext(dbContextOptions);
+            var result = await customersController.DeleteCustomerAsync(3);
+            Assert.That(result, Is.InstanceOf<NotFoundResult>());
+            Assert.That(context.Customers.Count(), Is.EqualTo(2));
         }
     }
 }

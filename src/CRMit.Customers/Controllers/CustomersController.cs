@@ -48,7 +48,7 @@ namespace CRMit.Customers.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<ActionResult<Customer>> GetCustomerAsync(int id)
+        public async Task<ActionResult<Customer>> GetCustomerAsync(long id)
         {
             var result = await context.FindAsync<Customer>(id);
             if (result == null)
@@ -59,7 +59,7 @@ namespace CRMit.Customers.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCustomerAsync(int id, Customer customer)
+        public async Task<IActionResult> UpdateCustomerAsync(long id, Customer customer)
         {
             if (id != customer.Id)
             {
@@ -75,6 +75,21 @@ namespace CRMit.Customers.Controllers
             {
                 return NotFound();
             }
+
+            return Ok();
+        }
+
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteCustomerAsync(long id)
+        {
+            var customer = await context.FindAsync<Customer>(id);
+            if (customer == null)
+            {
+                return NotFound();
+            }
+
+            context.Remove(customer);
+            await context.SaveChangesAsync();
 
             return Ok();
         }
