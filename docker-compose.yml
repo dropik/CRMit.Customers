@@ -1,8 +1,8 @@
 version: '3.4'
 
 services:
-  crmit.customers:
-    image: ${DOCKER_REGISTRY-}crmitcustomers
+  crmit-customers:
+    image: ${DOCKER_REGISTRY-}crmit-customers
     build:
       context: .
       dockerfile: src/CRMit.Customers/Dockerfile
