@@ -3,6 +3,7 @@ using CRMit.Customers.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using NUnit.Framework;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -36,6 +37,20 @@ namespace CRMit.Customers
             customersController = new CustomersController(new CustomersDbContext(dbContextOptions));
         }
 
+        [TearDown]
+        public async Task TearDown()
+        {
+            using var context = new CustomersDbContext(dbContextOptions);
+            var newCustomer = new Customer { Id = 3 };
+            context.Attach(newCustomer);
+            context.Remove(newCustomer);
+            try
+            {
+                await context.SaveChangesAsync();
+            }
+            catch (Exception) { }
+        }
+
         [Test]
         public async Task TestAllCustomersObtained()
         {
@@ -63,6 +78,43 @@ namespace CRMit.Customers
         public async Task TestOnNegativeId()
         {
             var result = (await customersController.GetCustomerAsync(-1)).Result as BadRequestResult;
+            Assert.That(result, Is.Not.Null);
+        }
+
+        [Test]
+        public async Task TestCustomerCreated()
+        {
+            using var context = new CustomersDbContext(dbContextOptions);
+            var newCustomer = new Customer { Id = 3, Name = "Petya", Email = "petya.example@gmail.com" };
+            
+            var result = await customersController.CreateCustomerAsync(newCustomer) as OkResult;
+
+            Assert.That(result, Is.Not.Null);
+            var addedCustomer = await context.FindAsync<Customer>(3);
+            Assert.That(addedCustomer, Is.EqualTo(newCustomer));
+        }
+
+        [Test]
+        public async Task TestCustomerCreatedIfIdNotProvided()
+        {
+            using var context = new CustomersDbContext(dbContextOptions);
+            var newCustomer = new Customer { Name = "Petya", Email = "petya.example@gmail.com" };
+            
+            var result = await customersController.CreateCustomerAsync(newCustomer) as OkResult;
+
+            Assert.That(result, Is.Not.Null);
+            var addedCustomer = await context.FindAsync<Customer>(3);
+            Assert.That(addedCustomer, Is.EqualTo(newCustomer));
+        }
+
+        [Test]
+        public async Task TestOnAttemptToAddCustomerWithNegativeId()
+        {
+            using var context = new CustomersDbContext(dbContextOptions);
+            var newCustomer = new Customer { Id = -1, Name = "Petya", Email = "petya.example@gmail.com" };
+            
+            var result = await customersController.CreateCustomerAsync(newCustomer) as BadRequestResult;
+
             Assert.That(result, Is.Not.Null);
         }
     }

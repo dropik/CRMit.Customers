@@ -1,6 +1,7 @@
 ﻿using CRMit.Customers.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
+using System;
 using System.Collections.Generic;
 using System.Threading.Tasks;
 
@@ -15,6 +16,20 @@ namespace CRMit.Customers.Controllers
         public CustomersController(CustomersDbContext context)
         {
             this.context = context;
+        }
+
+        [HttpPost("")]
+        public async Task<IActionResult> CreateCustomerAsync(Customer customer)
+        {
+            if (customer.Id < 0)
+            {
+                return new BadRequestResult();
+            }
+
+            await context.AddAsync(customer);
+            await context.SaveChangesAsync();
+
+            return new OkResult();
         }
 
         [HttpGet("")]
