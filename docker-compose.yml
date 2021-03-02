@@ -6,3 +6,6 @@ services:
     build:
       context: .
       dockerfile: src/CRMit.Customers/Dockerfile
+    ports:
+      - "50080:80"
+      - "50443:443"

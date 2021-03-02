@@ -7,6 +7,7 @@ pr:
 variables:
   - name: buildConfiguration
     value: Debug
+
   - name: projectName
     value: CRMit.Customers
 
