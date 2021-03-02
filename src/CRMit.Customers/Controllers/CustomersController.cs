@@ -20,7 +20,7 @@ namespace CRMit.Customers.Controllers
         }
 
         [HttpPost("")]
-        public async Task<IActionResult> CreateCustomerAsync(Customer customer)
+        public async Task<ActionResult<Customer>> CreateCustomerAsync(Customer customer)
         {
             if (customer.Id < 0)
             {
@@ -37,7 +37,7 @@ namespace CRMit.Customers.Controllers
                 return BadRequest();
             }
 
-            return Ok();
+            return CreatedAtAction(nameof(GetCustomerAsync), new { id = customer.Id }, customer);
         }
 
         [HttpGet("")]
