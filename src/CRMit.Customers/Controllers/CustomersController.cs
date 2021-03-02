@@ -24,7 +24,7 @@ namespace CRMit.Customers.Controllers
         {
             if (customer.Id < 0)
             {
-                return new BadRequestResult();
+                return BadRequest();
             }
 
             try
@@ -34,10 +34,10 @@ namespace CRMit.Customers.Controllers
             }
             catch (Exception)
             {
-                return new BadRequestResult();
+                return BadRequest();
             }
 
-            return new OkResult();
+            return Ok();
         }
 
         [HttpGet("")]
@@ -53,7 +53,7 @@ namespace CRMit.Customers.Controllers
             var result = await context.FindAsync<Customer>(id);
             if (result == null)
             {
-                return new NotFoundResult();
+                return NotFound();
             }
             return new JsonResult(result);
         }
@@ -63,7 +63,7 @@ namespace CRMit.Customers.Controllers
         {
             if (id != customer.Id)
             {
-                return new BadRequestResult();
+                return BadRequest();
             }
 
             if (context.Customers.Any(c => c.Id == id))
@@ -73,10 +73,10 @@ namespace CRMit.Customers.Controllers
             }
             else
             {
-                return new NotFoundResult();
+                return NotFound();
             }
 
-            return new OkResult();
+            return Ok();
         }
     }
 }
