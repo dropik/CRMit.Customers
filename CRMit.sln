@@ -17,7 +17,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{51879229-BD95-48AD-BADA-5789EC840771}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "CRMit.Customers.UnitTests", "test\CRMit.Customers.UnitTests\CRMit.Customers.UnitTests.csproj", "{1DE23C27-F116-407B-A1D0-6AA7E48503D5}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unittest", "unittest", "{7D34D761-05E9-47E3-8B8A-B213E32E6196}"
+EndProject
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRMit.Customers.UnitTests", "test\unittest\CRMit.Customers.UnitTests\CRMit.Customers.UnitTests.csproj", "{1DE23C27-F116-407B-A1D0-6AA7E48503D5}"
+	ProjectSection(ProjectDependencies) = postProject
+		{FE69DE6A-C6E8-444E-AE53-B0448CC42A18} = {FE69DE6A-C6E8-444E-AE53-B0448CC42A18}
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -43,7 +48,8 @@ Global
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
 		{FE69DE6A-C6E8-444E-AE53-B0448CC42A18} = {40BFF5AE-537E-4306-B1B4-5149A131E506}
-		{1DE23C27-F116-407B-A1D0-6AA7E48503D5} = {51879229-BD95-48AD-BADA-5789EC840771}
+		{7D34D761-05E9-47E3-8B8A-B213E32E6196} = {51879229-BD95-48AD-BADA-5789EC840771}
+		{1DE23C27-F116-407B-A1D0-6AA7E48503D5} = {7D34D761-05E9-47E3-8B8A-B213E32E6196}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1651E1C5-0F6B-43FA-9558-91800C425CD2}
