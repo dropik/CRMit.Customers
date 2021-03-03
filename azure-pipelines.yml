@@ -32,5 +32,5 @@ jobs:
         displayName: 'Publish code coverage report'
         inputs:
           codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Agent.TempDirectory)/$(Build.Build.BuildNumber)/TestResults/**/coverage.cobertura.xml'
+          summaryFileLocation: '$(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults/**/coverage.cobertura.xml'
           
