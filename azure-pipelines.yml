@@ -19,18 +19,18 @@ jobs:
           command: 'test'
           arguments: --configuration $(buildConfiguration) --logger trx --results-directory $(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults --collect:"XPlat Code Coverage" --settings unittest.runsettings
           publishTestResults: false
-          projects: 'test/unittest/$(projectName).UnitTests/$(projectName).UnitTests.csproj'
+          projects: test/unittest/$(projectName).UnitTests/$(projectName).UnitTests.csproj
 
       - task: PublishTestResults@2
-        displayName: Publisk test results
+        displayName: Publish test results
         inputs:
           testResultsFormat: VSTest
           testResultsFiles: $(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults/*.trx
           failTaskOnFailedTests: true
 
       - task: PublishCodeCoverageResults@1
-        displayName: 'Publish code coverage report'
+        displayName: Publish code coverage report
         inputs:
-          codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults/**/coverage.cobertura.xml'
+          codeCoverageTool: Cobertura
+          summaryFileLocation: $(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults/**/coverage.cobertura.xml
           
