@@ -17,7 +17,7 @@ jobs:
       - task: DotNetCoreCLI@2
         inputs:
           command: 'test'
-          arguments: --configuration $(buildConfiguration) --results-directory:"TestResults/" --collect:"XPlat Code Coverage" --settings unittest.runsettings
+          arguments: --configuration $(buildConfiguration) --results-directory TestResults --collect:"XPlat Code Coverage" --settings unittest.runsettings
           publishTestResults: true
           projects: 'test/unittest/$(projectName).UnitTests/$(projectName).UnitTests.csproj'
 
