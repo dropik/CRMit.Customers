@@ -17,13 +17,20 @@ jobs:
       - task: DotNetCoreCLI@2
         inputs:
           command: 'test'
-          arguments: --configuration $(buildConfiguration) --results-directory TestResults --collect:"XPlat Code Coverage" --settings unittest.runsettings
-          publishTestResults: true
+          arguments: --configuration $(buildConfiguration) --logger trx --results-directory $(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults --collect:"XPlat Code Coverage" --settings unittest.runsettings
+          publishTestResults: false
           projects: 'test/unittest/$(projectName).UnitTests/$(projectName).UnitTests.csproj'
+
+      - task: PublishTestResults@2
+        displayName: Publisk test results
+        inputs:
+          testResultsFormat: VSTest
+          testResultsFiles: $(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults/*.trx
+          failTaskOnFailedTests: true
 
       - task: PublishCodeCoverageResults@1
         displayName: 'Publish code coverage report'
         inputs:
           codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/**/coverage.cobertura.xml'
+          summaryFileLocation: '$(Agent.TempDirectory)/$(Build.Build.BuildNumber)/TestResults/**/coverage.cobertura.xml'
           
