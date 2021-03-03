@@ -17,7 +17,7 @@ jobs:
       - task: DotNetCoreCLI@2
         inputs:
           command: 'test'
-          arguments: --configuration $(buildConfiguration) --collect:"XPlat Code Coverage" --settings unittest.runsettings
+          arguments: --configuration $(buildConfiguration) --results-directory:"TestResults/" --collect:"XPlat Code Coverage" --settings unittest.runsettings
           publishTestResults: true
           projects: 'test/unittest/$(projectName).UnitTests/$(projectName).UnitTests.csproj'
 
@@ -25,5 +25,5 @@ jobs:
         displayName: 'Publish code coverage report'
         inputs:
           codeCoverageTool: 'Cobertura'
-          summaryFileLocation: '$(Agent.TempDirectory)/**/coverage.cobertura.xml'
+          summaryFileLocation: '$(Build.SourcesDirectory)/TestResults/**/coverage.cobertura.xml'
           
