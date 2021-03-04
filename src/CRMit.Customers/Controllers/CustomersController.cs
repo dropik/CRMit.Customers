@@ -20,7 +20,7 @@ namespace CRMit.Customers.Controllers
         }
 
         [HttpPost("")]
-        public async Task<ActionResult<Customer>> CreateCustomerAsync(CustomerDTO customer)
+        public async Task<ActionResult<Customer>> CreateCustomerAsync([FromBody]  CustomerDTO customer)
         {
             var newCustomer = new Customer(customer);
 
@@ -56,7 +56,7 @@ namespace CRMit.Customers.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCustomerAsync(long id, CustomerDTO customer)
+        public async Task<IActionResult> UpdateCustomerAsync(long id, [FromBody] CustomerDTO customer)
         {
             if (context.Customers.Any(c => c.Id == id))
             {
