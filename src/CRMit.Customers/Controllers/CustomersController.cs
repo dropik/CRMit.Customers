@@ -20,16 +20,13 @@ namespace CRMit.Customers.Controllers
         }
 
         [HttpPost("")]
-        public async Task<ActionResult<Customer>> CreateCustomerAsync(Customer customer)
+        public async Task<ActionResult<Customer>> CreateCustomerAsync(CustomerDTO customer)
         {
-            if (customer.Id < 0)
-            {
-                return BadRequest();
-            }
+            var newCustomer = new Customer(customer);
 
             try
             {
-                await context.AddAsync(customer);
+                await context.AddAsync(newCustomer);
                 await context.SaveChangesAsync();
             }
             catch (Exception)
@@ -37,7 +34,7 @@ namespace CRMit.Customers.Controllers
                 return BadRequest();
             }
 
-            return CreatedAtAction(nameof(GetCustomerAsync), new { id = customer.Id }, customer);
+            return CreatedAtAction(nameof(GetCustomerAsync), new { id = newCustomer.Id }, newCustomer);
         }
 
         [HttpGet("")]
@@ -59,17 +56,20 @@ namespace CRMit.Customers.Controllers
         }
 
         [HttpPut("{id}")]
-        public async Task<IActionResult> UpdateCustomerAsync(long id, Customer customer)
+        public async Task<IActionResult> UpdateCustomerAsync(long id, CustomerDTO customer)
         {
-            if (id != customer.Id)
-            {
-                return BadRequest();
-            }
-
             if (context.Customers.Any(c => c.Id == id))
             {
-                context.Update(customer);
-                await context.SaveChangesAsync();
+                try
+                {
+                    var updatedCustomer = new Customer(customer) { Id = id };
+                    context.Update(updatedCustomer);
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
             }
             else
             {
