@@ -47,7 +47,7 @@ namespace CRMit.Customers
             var newCustomer = new Customer(newCustomerDTO) { Id = 3 };
 
             var result = (await customersController.CreateCustomerAsync(newCustomerDTO)).Result as CreatedAtActionResult;
-            Assert.That(result.ActionName, Is.EqualTo("GetCustomerAsync"));
+            Assert.That(result.ActionName, Is.EqualTo("GetCustomer"));
             Assert.That(result.RouteValues["id"], Is.EqualTo(3));
             Assert.That(result.Value, Is.EqualTo(newCustomer));
             var addedCustomer = await context.FindAsync<Customer>((long)3);

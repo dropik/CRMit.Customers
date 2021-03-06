@@ -1,5 +1,6 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
@@ -23,6 +24,14 @@ namespace CRMit.Customers
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo { Title = "CRMit.Customers", Version = "v1" });
+            });
+            services.AddDbContext<CustomersDbContext>(optionsBuilder =>
+            {
+                var connectionString = Configuration["ConnectionString"];
+                optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), options =>
+                {
+                    options.EnableRetryOnFailure();
+                });
             });
         }
 

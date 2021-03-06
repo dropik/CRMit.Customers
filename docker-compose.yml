@@ -6,15 +6,12 @@ services:
     build:
       context: .
       dockerfile: src/CRMit.Customers/Dockerfile
-    ports:
-      - 50080:80
-      - 50443:443
     depends_on:
       - db
 
   db:
     image: mysql
-    ports:
-      - 3306:3306
+    command: --default-authentication-plugin=mysql_native_password
+    restart: always
     environment:
       - MYSQL_DATABASE=CustomersDB

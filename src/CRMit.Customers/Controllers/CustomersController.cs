@@ -20,14 +20,14 @@ namespace CRMit.Customers.Controllers
         }
 
         [HttpPost("")]
-        public async Task<ActionResult<Customer>> CreateCustomerAsync([FromBody]  CustomerDTO customer)
+        public async Task<ActionResult<Customer>> CreateCustomerAsync([FromBody] CustomerDTO customer)
         {
             var newCustomer = new Customer(customer);
 
             await context.AddAsync(newCustomer);
             await context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetCustomerAsync), new { id = newCustomer.Id }, newCustomer);
+            return CreatedAtAction("GetCustomer", new { id = newCustomer.Id }, newCustomer);
         }
 
         [HttpGet("")]
@@ -37,7 +37,7 @@ namespace CRMit.Customers.Controllers
             return new JsonResult(customers);
         }
 
-        [HttpGet("{id}")]
+        [HttpGet("{id}", Name = "GetCustomer")]
         public async Task<ActionResult<Customer>> GetCustomerAsync(long id)
         {
             var result = await context.FindAsync<Customer>(id);
