@@ -24,8 +24,15 @@ namespace CRMit.Customers.Controllers
         {
             var newCustomer = new Customer(customer);
 
-            await context.AddAsync(newCustomer);
-            await context.SaveChangesAsync();
+            try
+            {
+                await context.AddAsync(newCustomer);
+                await context.SaveChangesAsync();
+            }
+            catch (Exception)
+            {
+                return BadRequest();
+            }
 
             return CreatedAtAction("GetCustomer", new { id = newCustomer.Id }, newCustomer);
         }
@@ -54,8 +61,15 @@ namespace CRMit.Customers.Controllers
             if (context.Customers.Any(c => c.Id == id))
             {
                 var updatedCustomer = new Customer(customer) { Id = id };
-                context.Update(updatedCustomer);
-                await context.SaveChangesAsync();
+                try
+                {
+                    context.Update(updatedCustomer);
+                    await context.SaveChangesAsync();
+                }
+                catch (Exception)
+                {
+                    return BadRequest();
+                }
             }
             else
             {
