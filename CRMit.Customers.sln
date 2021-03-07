@@ -3,8 +3,6 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio Version 16
 VisualStudioVersion = 16.0.31019.35
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{40BFF5AE-537E-4306-B1B4-5149A131E506}"
-EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRMit.Customers", "src\CRMit.Customers\CRMit.Customers.csproj", "{FE69DE6A-C6E8-444E-AE53-B0448CC42A18}"
 EndProject
 Project("{E53339B2-1760-4266-BCC7-CA923CBCF16C}") = "docker-compose", "docker-compose.dcproj", "{3B29021C-E0AB-420C-9DB1-C39A37A5CB63}"
@@ -17,8 +15,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 		unittest.runsettings = unittest.runsettings
 		update-test-db.ps1 = update-test-db.ps1
 	EndProjectSection
-EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{51879229-BD95-48AD-BADA-5789EC840771}"
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRMit.Customers.UnitTests", "test\CRMit.Customers.UnitTests\CRMit.Customers.UnitTests.csproj", "{1DE23C27-F116-407B-A1D0-6AA7E48503D5}"
 	ProjectSection(ProjectDependencies) = postProject
@@ -52,13 +48,6 @@ Global
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
-	EndGlobalSection
-	GlobalSection(NestedProjects) = preSolution
-		{FE69DE6A-C6E8-444E-AE53-B0448CC42A18} = {40BFF5AE-537E-4306-B1B4-5149A131E506}
-		{7D34D761-05E9-47E3-8B8A-B213E32E6196} = {51879229-BD95-48AD-BADA-5789EC840771}
-		{1DE23C27-F116-407B-A1D0-6AA7E48503D5} = {7D34D761-05E9-47E3-8B8A-B213E32E6196}
-		{14683C59-E2B7-4342-AEE9-1C3C1739BFCA} = {51879229-BD95-48AD-BADA-5789EC840771}
-		{1D915CB9-81A5-4745-9F87-ABDC00DC87F5} = {14683C59-E2B7-4342-AEE9-1C3C1739BFCA}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {1651E1C5-0F6B-43FA-9558-91800C425CD2}
