@@ -75,6 +75,14 @@ namespace CRMit.Customers.IntegrationTests
         }
 
         [Test]
+        public async Task Test_CreateCustomer_GivenBadEmail_ResultsInBadRequest()
+        {
+            var newCustomer = new CustomerDTO { Name = "Ivan", Surname = "Petrov", Email = "ivan.petrov" };
+            var response = await client.PostAsJsonAsync("/api/v1/customers/", newCustomer);
+            Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
+        }
+
+        [Test]
         public async Task Test_CreateCustomer_GivenDuplicatedEmail_ResultsInBadRequest()
         {
             await PostIvanPetrov();
