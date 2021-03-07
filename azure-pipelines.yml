@@ -2,8 +2,7 @@ trigger:
   - staging
 
 pr:
-  - 'feature/*'
-  - 'fix/*'
+  - staging
 
 variables:
   - name: projectName
