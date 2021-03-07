@@ -19,7 +19,7 @@ jobs:
           command: 'test'
           arguments: --configuration $(buildConfiguration) --logger trx --results-directory $(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults --collect:"XPlat Code Coverage" --settings unittest.runsettings
           publishTestResults: false
-          projects: test/unittest/$(projectName).UnitTests/$(projectName).UnitTests.csproj
+          projects: test/$(projectName).UnitTests/$(projectName).UnitTests.csproj
 
       - task: PublishTestResults@2
         displayName: Publish test results
@@ -33,4 +33,38 @@ jobs:
         inputs:
           codeCoverageTool: Cobertura
           summaryFileLocation: $(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults/**/coverage.cobertura.xml
+  
+  - job: integrationtest
+    displayName: Integration Testing
+    steps:
+      - task: UseDotNet@2
+        inputs:
+          version: '5.0.x'
+
+      - task: DockerCompose@0
+        displayName: Create test containers
+        inputs:
+          containerregistrytype: 'Container Registry'
+          dockerComposeFile: 'docker-compose-test.yml'
+          action: 'Run a Docker Compose command'
+          dockerComposeCommand: 'up'
+          arguments: '--no-start'
           
+      - task: DockerCompose@0
+        displayName: Start containers
+        inputs:
+          containerregistrytype: 'Container Registry'
+          dockerComposeFile: 'docker-compose-test.yml'
+          action: 'Run a Docker Compose command'
+          dockerComposeCommand: 'start'
+
+      - task: PowerShell@2
+        displayName: Update database
+        inputs:
+          filePath: 'update-test-db.ps1'
+
+      - task: DotNetCoreCLI@2
+        inputs:
+          command: 'test'
+          projects: 'test/CRMit.Customers.IntegrationTests/CRMit.Customers.IntegrationTests.csproj'
+          publishTestResults: true

@@ -20,16 +20,12 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "test", "test", "{51879229-BD95-48AD-BADA-5789EC840771}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "unit", "unit", "{7D34D761-05E9-47E3-8B8A-B213E32E6196}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRMit.Customers.UnitTests", "test\unit\CRMit.Customers.UnitTests\CRMit.Customers.UnitTests.csproj", "{1DE23C27-F116-407B-A1D0-6AA7E48503D5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRMit.Customers.UnitTests", "test\CRMit.Customers.UnitTests\CRMit.Customers.UnitTests.csproj", "{1DE23C27-F116-407B-A1D0-6AA7E48503D5}"
 	ProjectSection(ProjectDependencies) = postProject
 		{FE69DE6A-C6E8-444E-AE53-B0448CC42A18} = {FE69DE6A-C6E8-444E-AE53-B0448CC42A18}
 	EndProjectSection
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "integration", "integration", "{14683C59-E2B7-4342-AEE9-1C3C1739BFCA}"
-EndProject
-Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRMit.Customers.IntegrationTests", "test\integration\CRMit.Customers.IntegrationTests\CRMit.Customers.IntegrationTests.csproj", "{1D915CB9-81A5-4745-9F87-ABDC00DC87F5}"
+Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRMit.Customers.IntegrationTests", "test\CRMit.Customers.IntegrationTests\CRMit.Customers.IntegrationTests.csproj", "{1D915CB9-81A5-4745-9F87-ABDC00DC87F5}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
