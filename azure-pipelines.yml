@@ -60,17 +60,6 @@ jobs:
 
       - task: DotNetCoreCLI@2
         inputs:
-          command: 'custom'
-          custom: 'tool'
-          arguments: 'restore'
-
-      - task: PowerShell@2
-        displayName: Update database
-        inputs:
-          filePath: 'update-test-db.ps1'
-
-      - task: DotNetCoreCLI@2
-        inputs:
           command: 'test'
           projects: 'test/CRMit.Customers.IntegrationTests/CRMit.Customers.IntegrationTests.csproj'
           publishTestResults: true
