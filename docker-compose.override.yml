@@ -10,8 +10,8 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     ports:
-      - 50080:80
-      - 50443:443
+      - 60080:80
+      - 60443:443
 
   db:
     environment:
@@ -19,4 +19,4 @@ services:
       - MYSQL_USER=customers_service
       - MYSQL_PASSWORD=password
     ports:
-      - 3307:3306
+      - 3306:3306

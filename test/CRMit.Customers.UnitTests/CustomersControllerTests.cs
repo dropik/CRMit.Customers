@@ -43,7 +43,7 @@ namespace CRMit.Customers
         public async Task TestCreateCustomer()
         {
             using var context = new CustomersDbContext(dbContextOptions);
-            var newCustomerDTO = new CustomerDTO { Name = "Petya", Surname = "Ivanov", Email = "petya.example@gmail.com" };
+            var newCustomerDTO = new CustomerInput { Name = "Petya", Surname = "Ivanov", Email = "petya.example@gmail.com" };
             var newCustomer = new Customer(newCustomerDTO) { Id = 3 };
 
             var result = (await customersController.CreateCustomerAsync(newCustomerDTO)).Result as CreatedAtActionResult;
@@ -81,7 +81,7 @@ namespace CRMit.Customers
         public async Task TestUpdateCustomer()
         {
             using var context = new CustomersDbContext(dbContextOptions);
-            var customerDTO = new CustomerDTO { Name = "Petya", Surname = "Ivanov", Email = "petya.example@gmail.com" };
+            var customerDTO = new CustomerInput { Name = "Petya", Surname = "Ivanov", Email = "petya.example@gmail.com" };
             var customer = new Customer(customerDTO) { Id = 2 };
 
             var result = await customersController.UpdateCustomerAsync(2, customerDTO);
@@ -92,7 +92,7 @@ namespace CRMit.Customers
         [Test]
         public async Task TestUpdateCustomerIfNotExists()
         {
-            var customer = new CustomerDTO();
+            var customer = new CustomerInput();
             var result = await customersController.UpdateCustomerAsync(3, customer);
             Assert.That(result, Is.InstanceOf<NotFoundResult>());
         }

@@ -30,6 +30,17 @@ namespace CRMit.Customers.IntegrationTests
             client = server.CreateClient();
         }
 
+        [OneTimeSetUp]
+        public async Task OneTimeSetup()
+        {
+            var connectionString = "Server=localhost;Port=3306;Database=CustomersDB;Uid=customers_service;Pwd=password";
+            using var context = new CustomersDbContext(
+                new DbContextOptionsBuilder<CustomersDbContext>()
+                    .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+                    .Options);
+            await context.Database.EnsureCreatedAsync();
+        }
+
         [SetUp]
         public async Task Setup()
         {
@@ -49,15 +60,15 @@ namespace CRMit.Customers.IntegrationTests
             await EnsureCustomerCreated(customer, response);
         }
 
-        private async Task<(CustomerDTO customer, HttpResponseMessage response)> PostIvanPetrov()
+        private async Task<(CustomerInput customer, HttpResponseMessage response)> PostIvanPetrov()
         {
-            var customer = new CustomerDTO { Name = "Ivan", Surname = "Petrov", Email = "ivan@gmail.com" };
-            var response = await client.PostAsJsonAsync("/api/v1/customers/", customer);
+            var customer = new CustomerInput { Name = "Ivan", Surname = "Petrov", Email = "ivan@gmail.com" };
+            var response = await client.PostAsJsonAsync("/crmit/v1/customers/", customer);
             response.EnsureSuccessStatusCode();
             return (customer, response);
         }
 
-        private async Task EnsureCustomerCreated(CustomerDTO customer, HttpResponseMessage prevResponse)
+        private async Task EnsureCustomerCreated(CustomerInput customer, HttpResponseMessage prevResponse)
         {
             var response = await client.GetAsync(prevResponse.Headers.Location);
             response.EnsureSuccessStatusCode();
@@ -69,16 +80,16 @@ namespace CRMit.Customers.IntegrationTests
         [Test]
         public async Task Test_CreateCustomer_GivenMissingProperties_ResultsInBadRequest()
         {
-            var newCustomer = new CustomerDTO { Name = "Ivan", Surname = "Petrov" };
-            var response = await client.PostAsJsonAsync("/api/v1/customers/", newCustomer);
+            var newCustomer = new CustomerInput { Name = "Ivan", Surname = "Petrov" };
+            var response = await client.PostAsJsonAsync("/crmit/v1/customers/", newCustomer);
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         }
 
         [Test]
         public async Task Test_CreateCustomer_GivenBadEmail_ResultsInBadRequest()
         {
-            var newCustomer = new CustomerDTO { Name = "Ivan", Surname = "Petrov", Email = "ivan.petrov" };
-            var response = await client.PostAsJsonAsync("/api/v1/customers/", newCustomer);
+            var newCustomer = new CustomerInput { Name = "Ivan", Surname = "Petrov", Email = "ivan.petrov" };
+            var response = await client.PostAsJsonAsync("/crmit/v1/customers/", newCustomer);
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         }
 
@@ -91,8 +102,8 @@ namespace CRMit.Customers.IntegrationTests
 
         private async Task EnsureDuplicatedEmailIsNotPermited()
         {
-            var customer2 = new CustomerDTO { Name = "Ivan", Surname = "Sidorov", Email = "ivan@gmail.com" };
-            var response = await client.PostAsJsonAsync("/api/v1/customers/", customer2);
+            var customer2 = new CustomerInput { Name = "Ivan", Surname = "Sidorov", Email = "ivan@gmail.com" };
+            var response = await client.PostAsJsonAsync("/crmit/v1/customers/", customer2);
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         }
 
@@ -104,18 +115,18 @@ namespace CRMit.Customers.IntegrationTests
             await EnsureEmailDuplicateIsNotPermitedOnEdit(customer);
         }
 
-        private async Task<CustomerDTO> PostIvanSidorov()
+        private async Task<CustomerInput> PostIvanSidorov()
         {
-            var customer = new CustomerDTO { Name = "Ivan", Surname = "Sidorov", Email = "ivan.sidorov@gmail.com" };
-            var response = await client.PostAsJsonAsync("/api/v1/customers/", customer);
+            var customer = new CustomerInput { Name = "Ivan", Surname = "Sidorov", Email = "ivan.sidorov@gmail.com" };
+            var response = await client.PostAsJsonAsync("/crmit/v1/customers/", customer);
             response.EnsureSuccessStatusCode();
             return customer;
         }
 
-        private async Task EnsureEmailDuplicateIsNotPermitedOnEdit(CustomerDTO customer)
+        private async Task EnsureEmailDuplicateIsNotPermitedOnEdit(CustomerInput customer)
         {
             customer.Email = "ivan@gmail.com";
-            var response = await client.PutAsJsonAsync("/api/v1/customers/2/", customer);
+            var response = await client.PutAsJsonAsync("/crmit/v1/customers/2/", customer);
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.BadRequest));
         }
 
@@ -129,13 +140,13 @@ namespace CRMit.Customers.IntegrationTests
 
         private async Task DeleteIvanPetrov()
         {
-            var response = await client.DeleteAsync("/api/v1/customers/1/");
+            var response = await client.DeleteAsync("/crmit/v1/customers/1/");
             response.EnsureSuccessStatusCode();
         }
 
         private async Task EnsureDeletedCustomerIsNotFound()
         {
-            var response = await client.GetAsync("/api/v1/customers/1/");
+            var response = await client.GetAsync("/crmit/v1/customers/1/");
             Assert.That(response.StatusCode, Is.EqualTo(HttpStatusCode.NotFound));
         }
     }

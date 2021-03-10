@@ -6,6 +6,20 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
+    <Version>0.0.0</Version>
+    <Authors>Daniil Ryzhkov</Authors>
+    <Company>Daniil Ryzhkov</Company>
+    <Description>Customers microservice for CRMit project.</Description>
+    <PackageProjectUrl>https://github.com/dropik/CRMit.Customers/</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dropik/CRMit.Customers/</RepositoryUrl>
+    <RepositoryType>GitHub</RepositoryType>
+    <PackageLicenseFile>LICENSE</PackageLicenseFile>
+    <Copyright>Daniil Ryzhkov</Copyright>
+  </PropertyGroup>
+
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
+    <GenerateDocumentationFile>true</GenerateDocumentationFile>
+    <NoWarn>1701;1702;CS1591</NoWarn>
   </PropertyGroup>
 
   <ItemGroup>
@@ -17,6 +31,13 @@
     <PackageReference Include="Microsoft.VisualStudio.Azure.Containers.Tools.Targets" Version="1.10.9" />
     <PackageReference Include="Pomelo.EntityFrameworkCore.MySql" Version="5.0.0-alpha.2" />
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.1.0" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <None Include="..\..\LICENSE">
+      <Pack>True</Pack>
+      <PackagePath></PackagePath>
+    </None>
   </ItemGroup>
 
 </Project>
