@@ -1,4 +1,3 @@
-using CRMit.Customers.Controllers;
 using CRMit.Customers.Models;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -7,7 +6,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace CRMit.Customers
+namespace CRMit.Customers.Controllers
 {
     [TestFixture]
     public class CustomersControllerTests

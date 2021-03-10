@@ -1,8 +1,10 @@
 using CRMit.Customers.Models;
+using CRMit.Customers.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
 using System.Net;
 using System.Net.Http;
@@ -14,31 +16,32 @@ namespace CRMit.Customers.IntegrationTests
     [TestFixture]
     public class CustomersIT
     {
-        private readonly HttpClient client;
-
-        public CustomersIT()
-        {
-            var server = new TestServer(new WebHostBuilder()
-                .UseEnvironment("Development")
-                .ConfigureAppConfiguration(builder =>
-                {
-                    builder.AddJsonFile("appsettings.json", optional: true)
-                           .AddJsonFile("appsettings.Development.json", optional: true);
-                })
-                .UseStartup<Startup>());
-
-            client = server.CreateClient();
-        }
+        private HttpClient client;
 
         [OneTimeSetUp]
         public async Task OneTimeSetup()
         {
-            var connectionString = "Server=localhost;Port=3306;Database=CustomersDB;Uid=customers_service;Pwd=password";
-            using var context = new CustomersDbContext(
-                new DbContextOptionsBuilder<CustomersDbContext>()
-                    .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-                    .Options);
-            await context.Database.EnsureCreatedAsync();
+            var server = CreateTestServer();
+            await ExecuteStartupTasks(server);
+            client = server.CreateClient();
+        }
+
+        private static TestServer CreateTestServer() => new(new WebHostBuilder()
+            .UseEnvironment("Development")
+            .ConfigureAppConfiguration(builder =>
+            {
+                builder.AddJsonFile("appsettings.json", optional: true)
+                        .AddJsonFile("appsettings.Development.json", optional: true);
+            })
+            .UseStartup<Startup>());
+
+        private static async Task ExecuteStartupTasks(TestServer server)
+        {
+            var tasks = server.Services.GetServices<IStartupTask>();
+            foreach (var task in tasks)
+            {
+                await task.ExecuteAsync();
+            }
         }
 
         [SetUp]

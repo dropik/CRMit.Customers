@@ -1,4 +1,6 @@
 using CRMit.Customers.Docs;
+using CRMit.Customers.Extensions;
+using CRMit.Customers.Services;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -24,6 +26,7 @@ namespace CRMit.Customers
         {
 
             services.AddControllers();
+
             services.AddSwaggerGen(c =>
             {
                 c.SwaggerDoc("v1", new OpenApiInfo
@@ -44,11 +47,14 @@ namespace CRMit.Customers
                     }
                 });
 
+#if DEBUG
                 var xmlPath = Path.Combine(AppContext.BaseDirectory, "CRMit.Customers.xml");
                 c.IncludeXmlComments(xmlPath);
+#endif
 
                 c.OperationFilter<OperationFilter>();
             });
+
             services.AddDbContext<CustomersDbContext>(optionsBuilder =>
             {
                 var connectionString = Configuration["ConnectionString"];
@@ -57,6 +63,8 @@ namespace CRMit.Customers
                     options.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
                 });
             });
+
+            services.AddStartupTask<DatabaseMigrator>();
         }
 
         public void Configure(IApplicationBuilder app, IWebHostEnvironment env)

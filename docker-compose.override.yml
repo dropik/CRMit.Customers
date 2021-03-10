@@ -10,8 +10,8 @@ services:
       - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
       - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
     ports:
-      - 60080:80
-      - 60443:443
+      - 4080:80
+      - 4443:443
 
   db:
     environment:
