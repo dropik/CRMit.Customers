@@ -1,5 +1,7 @@
 trigger:
-  - staging
+  branches:
+    include:
+      - staging
 
 pr:
   - staging
@@ -70,6 +72,15 @@ stages:
               command: 'test'
               projects: 'test/CRMit.Customers.IntegrationTests/CRMit.Customers.IntegrationTests.csproj'
               publishTestResults: true
+
+          - task: Bash@3
+            displayName: Testing tag detection
+            inputs:
+              targetType: 'inline'
+              script: |
+                $tags = git tag --sort=-creatordate
+                $tag = $tags[0]
+                echo "##vso[task.setvariable variable=tag]$tag"
 
   - stage: build
     displayName: Build
