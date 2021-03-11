@@ -139,3 +139,7 @@ Customer input data.
 | status | integer |  | No |
 | detail | string |  | No |
 | instance | string |  | No |
+
+## Changelogs
+### v1.0.0-preview
+* Added basic CRUD operations on Customers resource.

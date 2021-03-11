@@ -1,7 +1,7 @@
 trigger:
   branches:
     include:
-      - staging
+      - 'refs/tags/v*-preview'
 
 pr:
   - staging
@@ -9,7 +9,6 @@ pr:
 variables:
   - name: projectName
     value: CRMit.Customers
-
 
 stages:
   - stage: test
@@ -73,8 +72,15 @@ stages:
               projects: 'test/CRMit.Customers.IntegrationTests/CRMit.Customers.IntegrationTests.csproj'
               publishTestResults: true
 
+          
+  - stage: build
+    displayName: Build
+    condition: in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI')
+    jobs:
+      - job: Build docker image
+        steps:
           - task: Bash@3
-            displayName: Testing tag detection
+            displayName: Storing tag in a variable
             inputs:
               targetType: 'inline'
               script: |
@@ -82,13 +88,10 @@ stages:
                 tag=${tags[0]}
                 echo "##vso[task.setvariable variable=tag]$tag"
 
-  - stage: build
-    displayName: Build
-    condition: in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI')
-    jobs:
-      - job: test
-        steps:
-          - task: Bash@3
+          - task: Docker@2
             inputs:
-              targetType: 'inline'
-              script: 'echo ''Hello world'''
+              containerRegistry: 'Docker Registry'
+              repository: 'dropik/crmit-customers'
+              command: 'buildAndPush'
+              Dockerfile: 'src/CRMit.Customers/Dockerfile'
+              tags: '$(tag)'
