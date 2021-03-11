@@ -77,7 +77,8 @@ stages:
     displayName: Build
     condition: in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI')
     jobs:
-      - job: Build docker image
+      - job: build
+        displayName: Build docker image
         steps:
           - task: Bash@3
             displayName: Storing tag in a variable
