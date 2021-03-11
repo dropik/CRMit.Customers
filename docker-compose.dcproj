@@ -6,9 +6,10 @@
     <ProjectGuid>3b29021c-e0ab-420c-9db1-c39a37a5cb63</ProjectGuid>
     <DockerLaunchAction>LaunchBrowser</DockerLaunchAction>
     <DockerServiceUrl>{Scheme}://localhost:{ServicePort}/swagger</DockerServiceUrl>
-    <DockerServiceName>crmit.customers</DockerServiceName>
+    <DockerServiceName>crmit-customers</DockerServiceName>
   </PropertyGroup>
   <ItemGroup>
+    <None Include="docker-compose-test.yml" />
     <None Include="docker-compose.override.yml">
       <DependentUpon>docker-compose.yml</DependentUpon>
     </None>

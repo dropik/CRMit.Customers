@@ -1,0 +1,98 @@
+trigger:
+  branches:
+    include:
+      - 'refs/tags/v*-preview'
+
+pr:
+  - staging
+
+variables:
+  - name: projectName
+    value: CRMit.Customers
+
+stages:
+  - stage: test
+    displayName: Testing
+    condition: eq(variables['Build.Reason'], 'PullRequest')
+    jobs:
+      - job: unittest
+        displayName: Unit Testing
+        steps:
+          - task: UseDotNet@2
+            inputs:
+              version: '5.0.x'
+
+          - task: DotNetCoreCLI@2
+            inputs:
+              command: 'test'
+              arguments: --configuration Debug --logger trx --results-directory $(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults --collect:"XPlat Code Coverage" --settings unittest.runsettings
+              publishTestResults: false
+              projects: test/$(projectName).UnitTests/$(projectName).UnitTests.csproj
+
+          - task: PublishTestResults@2
+            displayName: Publish test results
+            inputs:
+              testResultsFormat: VSTest
+              testResultsFiles: $(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults/*.trx
+              failTaskOnFailedTests: true
+
+          - task: PublishCodeCoverageResults@1
+            displayName: Publish code coverage report
+            inputs:
+              codeCoverageTool: Cobertura
+              summaryFileLocation: $(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults/**/coverage.cobertura.xml
+  
+      - job: integrationtest
+        displayName: Integration Testing
+        steps:
+          - task: UseDotNet@2
+            inputs:
+              version: '5.0.x'
+
+          - task: DockerCompose@0
+            displayName: Create test containers
+            inputs:
+              containerregistrytype: 'Container Registry'
+              dockerComposeFile: 'docker-compose-test.yml'
+              action: 'Run a Docker Compose command'
+              dockerComposeCommand: 'up'
+              arguments: '--no-start'
+          
+          - task: DockerCompose@0
+            displayName: Start containers
+            inputs:
+              containerregistrytype: 'Container Registry'
+              dockerComposeFile: 'docker-compose-test.yml'
+              action: 'Run a Docker Compose command'
+              dockerComposeCommand: 'start'
+
+          - task: DotNetCoreCLI@2
+            inputs:
+              command: 'test'
+              projects: 'test/CRMit.Customers.IntegrationTests/CRMit.Customers.IntegrationTests.csproj'
+              publishTestResults: true
+
+          
+  - stage: build
+    displayName: Build
+    condition: in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI')
+    jobs:
+      - job: build
+        displayName: Build docker image
+        steps:
+          - task: Bash@3
+            displayName: Storing tag in a variable
+            inputs:
+              targetType: 'inline'
+              script: |
+                tags=$(git tag --sort=-creatordate)
+                tag=${tags[0]}
+                echo "##vso[task.setvariable variable=tag]$tag"
+
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'Docker Registry'
+              repository: 'dropik/crmit-customers'
+              command: 'buildAndPush'
+              Dockerfile: 'src/CRMit.Customers/Dockerfile'
+              tags: '$(tag)'
