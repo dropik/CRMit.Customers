@@ -92,7 +92,20 @@ stages:
           - task: Docker@2
             inputs:
               containerRegistry: 'Docker Registry'
+              command: 'login'
+              addPipelineData: false
+
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'Docker Registry'
               repository: 'dropik/crmit-customers'
               command: 'buildAndPush'
               Dockerfile: 'src/CRMit.Customers/Dockerfile'
+              buildContext: '$(Build.Repository.LocalPath)'
               tags: '$(tag)'
+
+          - task: Docker@2
+            inputs:
+              containerRegistry: 'Docker Registry'
+              command: 'logout'
+              addPipelineData: false
