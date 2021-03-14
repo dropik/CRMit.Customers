@@ -9,9 +9,6 @@ customer data, handles items, purchases and various notifications to customer
 # CRMit.Customers
 Microservice responsible for Customers resource in CRMit REST API v1.
 
-## Status
-[![Build Status](https://daniilryzhkov.visualstudio.com/CRMit/_apis/build/status/CRMit.Customers?branchName=staging)](https://daniilryzhkov.visualstudio.com/CRMit/_build/latest?definitionId=5&branchName=staging)
-
 ## Getting Started
 For demonstration purposes, composing is made via docker-compose. To start microservice, run  
 ```cmd
