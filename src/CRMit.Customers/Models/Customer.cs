@@ -4,7 +4,7 @@ using System.ComponentModel.DataAnnotations;
 namespace CRMit.Customers.Models
 {
     /// <summary>
-    /// Represents a customer which this CRM system targets.
+    /// Represents data of a single customer.
     /// </summary>
     public class Customer
     {
