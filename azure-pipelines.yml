@@ -1,7 +1,7 @@
 trigger:
   branches:
-    include:
-      - 'refs/tags/v*-preview'
+    exclude:
+      - '*'
 
 pr:
   - staging
@@ -13,7 +13,6 @@ variables:
 stages:
   - stage: test
     displayName: Testing
-    condition: eq(variables['Build.Reason'], 'PullRequest')
     jobs:
       - job: unittest
         displayName: Unit Testing
@@ -86,20 +85,10 @@ stages:
           
   - stage: build
     displayName: Build
-    condition: in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI')
     jobs:
       - job: build
         displayName: Build docker image
         steps:
-          - task: Bash@3
-            displayName: Storing tag in a variable
-            inputs:
-              targetType: 'inline'
-              script: |
-                tags=$(git tag --sort=-creatordate)
-                tag=${tags[0]}
-                echo "##vso[task.setvariable variable=tag]$tag"
-
           - task: Docker@2
             inputs:
               containerRegistry: 'Docker Registry'
@@ -113,7 +102,7 @@ stages:
               command: 'buildAndPush'
               Dockerfile: 'src/CRMit.Customers/Dockerfile'
               buildContext: '$(Build.Repository.LocalPath)'
-              tags: '$(tag)'
+              tags: 'staging'
 
           - task: Docker@2
             inputs:
