@@ -137,6 +137,7 @@ stages:
             displayName: Start system
             inputs:
               filePath: 'run.sh'
+              arguments: '-t'
               workingDirectory: '$(Build.Repository.LocalPath)'
               failOnStderr: true
 
