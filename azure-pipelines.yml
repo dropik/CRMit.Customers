@@ -72,7 +72,7 @@ stages:
               script: |
                 docker build -t crmit-customers-it -f test/CRMit.Customers.IntegrationTests/Dockerfile $(Build.Repository.LocalPath)
                 docker run --name crmit-customers-it --network=crmit-customers crmit-customers-it
-                docker cp crmit-customers-it:/testresults ./testresults/it
+                docker cp crmit-customers-it:/testresults ./it-results
                 docker rm crmit-customers-it
 
           - task: DockerCompose@0
@@ -88,7 +88,7 @@ stages:
             inputs:
               testResultsFormat: 'VSTest'
               testResultsFiles: '**/*.trx'
-              searchFolder: '$(System.DefaultWorkingDirectory)/testresults/it'
+              searchFolder: '$(System.DefaultWorkingDirectory)/it-results'
               failTaskOnFailedTests: true
           
   - stage: build
@@ -146,7 +146,7 @@ stages:
               script: |
                 docker build -t crmit-e2e -f test/CRMit.E2E/Dockerfile $(Build.Repository.LocalPath)
                 docker run --name crmit-e2e --network=crmit-services crmit-e2e
-                docker cp crmit-e2e:/testresults ./testresults/e2e
+                docker cp crmit-e2e:/testresults ./e2e-results
                 docker rm crmit-e2e
 
           - task: BatchScript@1
@@ -160,5 +160,5 @@ stages:
             inputs:
               testResultsFormat: 'VSTest'
               testResultsFiles: '**/*.trx'
-              searchFolder: '$(System.DefaultWorkingDirectory)/testresults/e2e'
+              searchFolder: '$(System.DefaultWorkingDirectory)/e2e-results'
               failTaskOnFailedTests: true
