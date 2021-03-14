@@ -126,18 +126,19 @@ stages:
         steps:
           - checkout: crmit
 
-          - task: BatchScript@1
-            displayName: Configuring bootstrap
+          - task: Bash@3
+            displayName: Configure bootstrap
             inputs:
-              filename: 'config.cmd'
-              workingFolder: '$(Build.Repository.LocalPath)'
+              filePath: 'config.sh'
+              workingDirectory: '$(Build.Repository.LocalPath)'
+              failOnStderr: true
 
-          - task: BatchScript@1
+          - task: Bash@3
             displayName: Start system
             inputs:
-              filename: 'run.cmd'
-              arguments: /t
-              workingFolder: '$(Build.Repository.LocalPath)'
+              filePath: 'run.sh'
+              workingDirectory: '$(Build.Repository.LocalPath)'
+              failOnStderr: true
 
           - task: PowerShell@2
             displayName: Run tests
@@ -149,11 +150,11 @@ stages:
                 docker cp crmit-e2e:/testresults ./e2e-results
                 docker rm crmit-e2e
 
-          - task: BatchScript@1
+          - task: Bash@3
             displayName: Stop system
             inputs:
-              filename: 'down.cmd'
-              workingFolder: '$(Build.Repository.LocalPath)'
+              filePath: 'down.sh'
+              workingDirectory: '$(Build.Repository.LocalPath)'
 
           - task: PublishTestResults@2
             displayName: Publish test results
