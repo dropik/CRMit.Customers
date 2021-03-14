@@ -6,6 +6,14 @@ trigger:
 pr:
   - master
 
+resources:
+  repositories:
+    - repository: crmit
+      type: github
+      name: dropik/CRMit
+      ref: refs/heads/master
+      endpoint: dropik
+
 variables:
   - name: projectName
     value: CRMit.Customers
@@ -64,7 +72,7 @@ stages:
               script: |
                 docker build -t crmit-customers-it -f test/CRMit.Customers.IntegrationTests/Dockerfile $(Build.Repository.LocalPath)
                 docker run --name crmit-customers-it --network=crmit-customers crmit-customers-it
-                docker cp crmit-customers-it:/testresults ./testresults
+                docker cp crmit-customers-it:/testresults ./testresults/it
                 docker rm crmit-customers-it
 
           - task: DockerCompose@0
@@ -80,7 +88,7 @@ stages:
             inputs:
               testResultsFormat: 'VSTest'
               testResultsFiles: '**/*.trx'
-              searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
+              searchFolder: '$(System.DefaultWorkingDirectory)/testresults/it'
               failTaskOnFailedTests: true
           
   - stage: build
@@ -109,3 +117,48 @@ stages:
               containerRegistry: 'Docker Registry'
               command: 'logout'
               addPipelineData: false
+
+  - stage: e2e
+    displayName: Acceptance
+    jobs:
+      - job: e2e
+        displayName: Running E2E tests
+        steps:
+          - checkout: crmit
+
+          - task: BatchScript@1
+            displayName: Configuring bootstrap
+            inputs:
+              filename: 'config.cmd'
+              workingFolder: '$(Build.Repository.LocalPath)'
+
+          - task: BatchScript@1
+            displayName: Start system
+            inputs:
+              filename: 'run.cmd'
+              arguments: /t
+              workingFolder: '$(Build.Repository.LocalPath)'
+
+          - task: PowerShell@2
+            displayName: Run tests
+            inputs:
+              targetType: 'inline'
+              script: |
+                docker build -t crmit-e2e -f test/CRMit.E2E/Dockerfile $(Build.Repository.LocalPath)
+                docker run --name crmit-e2e --network=crmit-services crmit-e2e
+                docker cp crmit-e2e:/testresults ./testresults/e2e
+                docker rm crmit-e2e
+
+          - task: BatchScript@1
+            displayName: Stop system
+            inputs:
+              filename: 'down.cmd'
+              workingFolder: '$(Build.Repository.LocalPath)'
+
+          - task: PublishTestResults@2
+            displayName: Publish test results
+            inputs:
+              testResultsFormat: 'VSTest'
+              testResultsFiles: '**/*.trx'
+              searchFolder: '$(System.DefaultWorkingDirectory)/testresults/e2e'
+              failTaskOnFailedTests: true
