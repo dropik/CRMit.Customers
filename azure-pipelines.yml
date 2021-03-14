@@ -131,7 +131,6 @@ stages:
             inputs:
               filePath: 'config.sh'
               workingDirectory: '$(Build.Repository.LocalPath)'
-              failOnStderr: true
 
           - task: Bash@3
             displayName: Start system
@@ -139,7 +138,6 @@ stages:
               filePath: 'run.sh'
               arguments: '-t'
               workingDirectory: '$(Build.Repository.LocalPath)'
-              failOnStderr: true
 
           - task: PowerShell@2
             displayName: Run tests
