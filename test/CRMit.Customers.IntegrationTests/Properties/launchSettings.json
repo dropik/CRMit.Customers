@@ -1,0 +1,10 @@
+{
+  "profiles": {
+    "CRMit.Customers.IntegrationTests": {
+      "commandName": "Project"
+    },
+    "Docker (1)": {
+      "commandName": "Docker"
+    }
+  }
+}

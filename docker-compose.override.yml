@@ -2,21 +2,16 @@ version: '3.4'
 
 services:
   crmit-customers:
+    image: ${DOCKER_REGISTRY-}crmit-customers
+    build:
+      context: .
+      dockerfile: src/CRMit.Customers/Dockerfile
+    depends_on:
+      - db
+    networks:
+      - crmit-customers
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=https://+:443;http://+:80
-      - ConnectionString=Server=db;Port=3306;Database=CustomersDB;Uid=customers_service;Pwd=password
-    volumes:
-      - ${APPDATA}/Microsoft/UserSecrets:/root/.microsoft/usersecrets:ro
-      - ${APPDATA}/ASP.NET/Https:/root/.aspnet/https:ro
+      - ASPNETCORE_URLS=http://+:80
     ports:
-      - 4080:80
-      - 4443:443
-
-  db:
-    environment:
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=customers_service
-      - MYSQL_PASSWORD=password
-    ports:
-      - 3306:3306
+      - 8080:80

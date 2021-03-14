@@ -50,28 +50,38 @@ stages:
               version: '5.0.x'
 
           - task: DockerCompose@0
-            displayName: Create test containers
+            displayName: Up DB container
             inputs:
               containerregistrytype: 'Container Registry'
-              dockerComposeFile: 'docker-compose-test.yml'
+              dockerComposeFile: 'docker-compose.yml'
               action: 'Run a Docker Compose command'
               dockerComposeCommand: 'up'
-              arguments: '--no-start'
-          
+              arguments: '-d'
+
+          - task: PowerShell@2
+            displayName: Run tests
+            inputs:
+              targetType: 'inline'
+              script: |
+                docker build -t crmit-customers-it -f test/CRMit.Customers.IntegrationTests/Dockerfile $(Build.Repository.LocalPath)
+                docker run --name crmit-customers-it --network=crmit-customers crmit-customers-it
+                docker cp crmit-customers-it:/testresults ./testresults
+                docker rm crmit-customers-it
+
           - task: DockerCompose@0
-            displayName: Start containers
+            displayName: Down DB container
             inputs:
               containerregistrytype: 'Container Registry'
-              dockerComposeFile: 'docker-compose-test.yml'
+              dockerComposeFile: 'docker-compose.yml'
               action: 'Run a Docker Compose command'
-              dockerComposeCommand: 'start'
+              dockerComposeCommand: 'down'
 
-          - task: DotNetCoreCLI@2
+          - task: PublishTestResults@2
+            displayName: Publish test results
             inputs:
-              command: 'test'
-              projects: 'test/CRMit.Customers.IntegrationTests/CRMit.Customers.IntegrationTests.csproj'
-              publishTestResults: true
-
+              testResultsFormat: 'VSTest'
+              testResultsFiles: '**/*.trx'
+              searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
           
   - stage: build
     displayName: Build
