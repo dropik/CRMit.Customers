@@ -1,5 +1,4 @@
 FROM mcr.microsoft.com/dotnet/sdk:5.0
-LABEL test=true
 COPY . .
 WORKDIR /test/CRMit.Customers.IntegrationTests
 RUN dotnet restore "CRMit.Customers.IntegrationTests.csproj"

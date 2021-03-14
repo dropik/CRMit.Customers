@@ -82,6 +82,7 @@ stages:
               testResultsFormat: 'VSTest'
               testResultsFiles: '**/*.trx'
               searchFolder: '$(System.DefaultWorkingDirectory)/testresults'
+              failTaskOnFailedTests: true
           
   - stage: build
     displayName: Build
