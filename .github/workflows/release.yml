@@ -25,6 +25,6 @@ jobs:
         run: |
           tags=$(git tag -l)
           tag=${tags[0]}
-          docker pull \dropik/crmit-customers:staging
-          docker tag \dropik/crmit-customers:staging \dropik/crmit-customers:$tag
-          docker push \dropik/crmit-customers:$tag
+          docker pull OWNER/crmit-customers:staging
+          docker tag OWNER/crmit-customers:staging OWNER/crmit-customers:$tag
+          docker push OWNER/crmit-customers:$tag
