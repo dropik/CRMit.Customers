@@ -11,11 +11,6 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution 
 	ProjectSection(SolutionItems) = preProject
 		.gitattributes = .gitattributes
 		.gitignore = .gitignore
-		azure-pipelines.yml = azure-pipelines.yml
-		GenerateDocMD.cmd = GenerateDocMD.cmd
-		README.md = README.md
-		run.cmd = run.cmd
-		unittest.runsettings = unittest.runsettings
 	EndProjectSection
 EndProject
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "CRMit.Customers.UnitTests", "test\CRMit.Customers.UnitTests\CRMit.Customers.UnitTests.csproj", "{1DE23C27-F116-407B-A1D0-6AA7E48503D5}"
