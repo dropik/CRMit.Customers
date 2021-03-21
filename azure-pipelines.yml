@@ -18,6 +18,9 @@ variables:
   - name: projectName
     value: CRMit.Customers
 
+  - name: containerName
+    value: crmit-customers
+
 stages:
   - stage: test
     displayName: Testing
@@ -70,10 +73,10 @@ stages:
             inputs:
               targetType: 'inline'
               script: |
-                docker build -t crmit-customers-it -f test/CRMit.Customers.IntegrationTests/Dockerfile $(Build.Repository.LocalPath)
-                docker run --name crmit-customers-it --network=crmit-customers crmit-customers-it
-                docker cp crmit-customers-it:/testresults ./it-results
-                docker rm crmit-customers-it
+                docker build -t $(containerName)-it -f test/CRMit.Customers.IntegrationTests/Dockerfile $(Build.Repository.LocalPath)
+                docker run --name $(containerName)-it --network=$(containerName) $(containerName)-it
+                docker cp $(containerName)-it:/testresults ./it-results
+                docker rm $(containerName)-it
 
           - task: DockerCompose@0
             displayName: Down DB container
