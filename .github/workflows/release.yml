@@ -1,0 +1,27 @@
+name: Release
+
+on:
+  pull_request:
+    tags: [ 'v*' ]
+
+jobs:
+  push_tag:
+    name: Push tag to docker
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Docker Login
+        uses: docker/login-action@v1.8.0
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_PASSWORD }}
+
+      - name: Push tag
+        uses: actions/github-script@v3.1.0
+        with:
+          script: |
+            tags=$(git tag -l)
+            tag=${tags[0]}
+            docker pull dropik/crmit-customers:staging
+            docker tag dropik/crmit-customers:staging dropik/crmit-customers:$tag
+            docker push dropik/crmit-customers:$tag
