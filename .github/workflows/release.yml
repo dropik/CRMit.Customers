@@ -21,12 +21,18 @@ jobs:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
-      - name: Push tag
-        env:
-          OWNER: dropik
+      - name: Get last tag
+        id: last_tag
         run: |
           tags=$(git tag -l)
           tag=${tags[0]}
-          docker pull $OWNER/crmit-customers:staging
-          docker tag $OWNER/crmit-customers:staging $OWNER/crmit-customers:$tag
-          docker push $OWNER/crmit-customers:$tag
+          echo "::set-output name=tag::$tag"
+
+      - name: Pull staging image
+        run: docker pull dropik/crmit-customers:staging
+
+      - name: Set tag
+        run: docker tag $OWNER/crmit-customers:staging $OWNER/crmit-customers:${{ steps.last_tag.tag }}
+      
+      - name: Push tag
+        run: docker push $OWNER/crmit-customers:${{ steps.last_tag.tag }}
