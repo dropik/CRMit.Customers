@@ -1,19 +1,29 @@
 trigger:
   branches:
-    include:
-      - 'refs/tags/v*-preview'
+    exclude:
+      - '*'
 
 pr:
-  - staging
+  - master
+
+resources:
+  repositories:
+    - repository: crmit
+      type: github
+      name: dropik/CRMit
+      ref: refs/heads/master
+      endpoint: dropik
 
 variables:
   - name: projectName
     value: CRMit.Customers
 
+  - name: containerName
+    value: crmit-customers
+
 stages:
   - stage: test
     displayName: Testing
-    condition: eq(variables['Build.Reason'], 'PullRequest')
     jobs:
       - job: unittest
         displayName: Unit Testing
@@ -23,6 +33,7 @@ stages:
               version: '5.0.x'
 
           - task: DotNetCoreCLI@2
+            displayName: Run tests
             inputs:
               command: 'test'
               arguments: --configuration Debug --logger trx --results-directory $(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults --collect:"XPlat Code Coverage" --settings unittest.runsettings
@@ -50,62 +61,111 @@ stages:
               version: '5.0.x'
 
           - task: DockerCompose@0
-            displayName: Create test containers
+            displayName: Up DB container
             inputs:
               containerregistrytype: 'Container Registry'
-              dockerComposeFile: 'docker-compose-test.yml'
+              dockerComposeFile: 'docker-compose.yml'
               action: 'Run a Docker Compose command'
               dockerComposeCommand: 'up'
-              arguments: '--no-start'
-          
+              arguments: '-d'
+
+          - task: PowerShell@2
+            displayName: Run tests
+            inputs:
+              targetType: 'inline'
+              script: |
+                docker build -t $(containerName)-it -f test/CRMit.Customers.IntegrationTests/Dockerfile $(Build.Repository.LocalPath)
+                docker run --name $(containerName)-it --network=$(containerName) $(containerName)-it
+                docker cp $(containerName)-it:/testresults ./it-results
+                docker rm $(containerName)-it
+
           - task: DockerCompose@0
-            displayName: Start containers
+            displayName: Down DB container
             inputs:
               containerregistrytype: 'Container Registry'
-              dockerComposeFile: 'docker-compose-test.yml'
+              dockerComposeFile: 'docker-compose.yml'
               action: 'Run a Docker Compose command'
-              dockerComposeCommand: 'start'
+              dockerComposeCommand: 'down'
 
-          - task: DotNetCoreCLI@2
+          - task: PublishTestResults@2
+            displayName: Publish test results
             inputs:
-              command: 'test'
-              projects: 'test/CRMit.Customers.IntegrationTests/CRMit.Customers.IntegrationTests.csproj'
-              publishTestResults: true
-
+              testResultsFormat: 'VSTest'
+              testResultsFiles: '**/*.trx'
+              searchFolder: '$(System.DefaultWorkingDirectory)/it-results'
+              failTaskOnFailedTests: true
           
   - stage: build
     displayName: Build
-    condition: in(variables['Build.Reason'], 'IndividualCI', 'BatchedCI')
     jobs:
       - job: build
         displayName: Build docker image
         steps:
-          - task: Bash@3
-            displayName: Storing tag in a variable
-            inputs:
-              targetType: 'inline'
-              script: |
-                tags=$(git tag --sort=-creatordate)
-                tag=${tags[0]}
-                echo "##vso[task.setvariable variable=tag]$tag"
-
           - task: Docker@2
+            displayName: Login
             inputs:
               containerRegistry: 'Docker Registry'
               command: 'login'
               addPipelineData: false
 
           - task: Docker@2
+            displayName: Build and push staging
             inputs:
               containerRegistry: 'Docker Registry'
               repository: 'dropik/crmit-customers'
               command: 'buildAndPush'
               Dockerfile: 'src/CRMit.Customers/Dockerfile'
               buildContext: '$(Build.Repository.LocalPath)'
-              tags: '$(tag)'
+              tags: 'staging'
 
           - task: Docker@2
+            displayName: Logout
             inputs:
               containerRegistry: 'Docker Registry'
               command: 'logout'
               addPipelineData: false
+
+  - stage: e2e
+    displayName: Acceptance
+    jobs:
+      - job: e2e
+        displayName: Running E2E tests
+        steps:
+          - checkout: crmit
+
+          - task: Bash@3
+            displayName: Configure bootstrap
+            inputs:
+              filePath: 'config.sh'
+              workingDirectory: '$(Build.Repository.LocalPath)'
+
+          - task: Bash@3
+            displayName: Start system
+            inputs:
+              filePath: 'run.sh'
+              arguments: '-t'
+              workingDirectory: '$(Build.Repository.LocalPath)'
+
+          - task: PowerShell@2
+            displayName: Run tests
+            inputs:
+              targetType: 'inline'
+              script: |
+                docker build -t crmit-e2e -f test/CRMit.E2E/Dockerfile $(Build.Repository.LocalPath)
+                docker run --name crmit-e2e --network=crmit-services crmit-e2e
+                docker cp crmit-e2e:/testresults ./e2e-results
+                docker rm crmit-e2e
+
+          - task: Bash@3
+            displayName: Stop system
+            inputs:
+              filePath: 'down.sh'
+              workingDirectory: '$(Build.Repository.LocalPath)'
+
+          - task: PublishTestResults@2
+            displayName: Publish test results
+            inputs:
+              testResultsFormat: 'VSTest'
+              testResultsFiles: '**/*.trx'
+              searchFolder: '$(System.DefaultWorkingDirectory)/e2e-results'
+              failTaskOnFailedTests: true

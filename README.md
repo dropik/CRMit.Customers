@@ -1,17 +1,25 @@
+# CRMit
+An example of a CRM system for a generic busyness. Based on microservice architecture. Implemented with ASP.NET Core.
+
+## Purposes
+As the 'CRM' (Customer Relationship Management) prefix in the name CRMit suggests, this system manages the relationship 
+between the customer itself and the busyness (which in this case is a generic item-selling busyness). It stores 
+customer data, handles items, purchases and various notifications to customer
+
 # CRMit.Customers
-Microservice responsible for Customer resource in CRMit API v1.
+Microservice responsible for Customers resource in CRMit REST API v1.
 
 ## Getting Started
-Currently testable in a single host environment via docker-compose. To start microservice, run  
+For demonstration purposes, composing is made via docker-compose. To start microservice, run  
 ```cmd
 > run.cmd
 ```
 
-# API Resource: Customers
+# REST API Resource: Customers
 
 ## Customer
 
-Represents a customer which this CRM system targets.
+Represents data of a single customer.
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
@@ -140,6 +148,6 @@ Customer input data.
 | detail | string |  | No |
 | instance | string |  | No |
 
-## Changelogs
-### v1.0.0-preview
+## Changelog
+### v1.0.0
 * Added basic CRUD operations on Customers resource.
