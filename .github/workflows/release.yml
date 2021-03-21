@@ -23,10 +23,7 @@ jobs:
 
       - name: Get last tag
         id: last_tag
-        run: |
-          tags=$(git tag -l)
-          tag=${tags[0]}
-          echo "::set-output name=tag::$tag"
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
 
       - name: Pull staging image
         run: docker pull dropik/crmit-customers:staging
