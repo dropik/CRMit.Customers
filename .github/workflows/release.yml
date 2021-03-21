@@ -22,9 +22,11 @@ jobs:
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
 
       - name: Push tag
+        env:
+          OWNER: dropik
         run: |
           tags=$(git tag -l)
           tag=${tags[0]}
-          docker pull OWNER/crmit-customers:staging
-          docker tag OWNER/crmit-customers:staging OWNER/crmit-customers:$tag
-          docker push OWNER/crmit-customers:$tag
+          docker pull $OWNER/crmit-customers:staging
+          docker tag $OWNER/crmit-customers:staging $OWNER/crmit-customers:$tag
+          docker push $OWNER/crmit-customers:$tag
