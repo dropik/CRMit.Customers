@@ -33,6 +33,7 @@ stages:
               version: '5.0.x'
 
           - task: DotNetCoreCLI@2
+            displayName: Run tests
             inputs:
               command: 'test'
               arguments: --configuration Debug --logger trx --results-directory $(Agent.TempDirectory)/$(Build.BuildNumber)/TestResults --collect:"XPlat Code Coverage" --settings unittest.runsettings
@@ -101,12 +102,14 @@ stages:
         displayName: Build docker image
         steps:
           - task: Docker@2
+            displayName: Login
             inputs:
               containerRegistry: 'Docker Registry'
               command: 'login'
               addPipelineData: false
 
           - task: Docker@2
+            displayName: Build and push staging
             inputs:
               containerRegistry: 'Docker Registry'
               repository: 'dropik/crmit-customers'
@@ -116,6 +119,7 @@ stages:
               tags: 'staging'
 
           - task: Docker@2
+            displayName: Logout
             inputs:
               containerRegistry: 'Docker Registry'
               command: 'logout'
