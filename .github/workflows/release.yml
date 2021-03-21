@@ -32,7 +32,7 @@ jobs:
         run: docker pull dropik/crmit-customers:staging
 
       - name: Set tag
-        run: docker tag dropik/crmit-customers:staging dropik/crmit-customers:${{ steps.last_tag.tag }}
+        run: docker tag dropik/crmit-customers:staging dropik/crmit-customers:${{ steps.last_tag.outputs.tag }}
       
       - name: Push tag
-        run: docker push dropik/crmit-customers:${{ steps.last_tag.tag }}
+        run: docker push dropik/crmit-customers:${{ steps.last_tag.outputs.tag }}
