@@ -36,3 +36,22 @@ jobs:
       
       - name: Push tag
         run: docker push dropik/crmit-customers:${{ steps.last_tag.outputs.tag }}
+
+  create-release:
+    name: Create Release
+    needs: [push_tag]
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.ref }}
+          release_name: Release ${{ github.ref }}
+          body_path: README.md
+          draft: false
+          prerelease: false
