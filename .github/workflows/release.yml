@@ -14,16 +14,19 @@ jobs:
 
     steps:
       - uses: actions/checkout@v2.3.4
+
+      - name: Fetch tags
+        run: git fetch --prune --unshallow --tags
+
+      - name: Get last tag
+        id: last_tag
+        uses: "WyriHaximus/github-action-get-previous-tag@v1"
       
       - name: Docker Login
         uses: docker/login-action@v1.8.0
         with:
           username: ${{ secrets.DOCKERHUB_USERNAME }}
           password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Get last tag
-        id: last_tag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
 
       - name: Pull staging image
         run: docker pull dropik/crmit-customers:staging
