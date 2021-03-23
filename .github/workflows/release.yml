@@ -1,15 +1,13 @@
 name: Release
 
 on:
-  pull_request:
-    branches:
-      - master
+  push:
     tags:
       - v*
 
 jobs:
   push_tag:
-    name: Push tag to docker
+    name: Push tag to Docker repository
     runs-on: ubuntu-latest
 
     steps:
