@@ -1,6 +1,10 @@
 name: Release
 
 on:
+  pull_request:
+    branches:
+      - master
+
   push:
     tags:
       - v*
@@ -13,43 +17,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2.3.4
 
-      - name: Fetch tags
-        run: git fetch --prune --unshallow --tags
-
-      - name: Get last tag
-        id: last_tag
-        uses: "WyriHaximus/github-action-get-previous-tag@v1"
-      
-      - name: Docker Login
-        uses: docker/login-action@v1.8.0
-        with:
-          username: ${{ secrets.DOCKERHUB_USERNAME }}
-          password: ${{ secrets.DOCKERHUB_PASSWORD }}
-
-      - name: Pull staging image
-        run: docker pull dropik/crmit-customers:staging
-
-      - name: Set tag
-        run: docker tag dropik/crmit-customers:staging dropik/crmit-customers:${{ steps.last_tag.outputs.tag }}
-      
-      - name: Push tag
-        run: docker push dropik/crmit-customers:${{ steps.last_tag.outputs.tag }}
-
-  create-release:
-    name: Create Release
-    needs: [push_tag]
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.ref }}
-          release_name: Release ${{ github.ref }}
-          body_path: README.md
-          draft: false
-          prerelease: false
+      - name: Delete v1.0.0
+        run: git tag -d v1.0.0
