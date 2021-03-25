@@ -47,7 +47,7 @@ namespace CRMit.Customers.IntegrationTests
         [SetUp]
         public async Task Setup()
         {
-            var connectionString = "Server=db;Port=3306;Database=CustomersDB;Uid=customers_service;Pwd=password";
+            var connectionString = "Server=localhost;Port=3306;Database=CustomersDB;Uid=customers_service;Pwd=password";
             using var context = new CustomersDbContext(
                 new DbContextOptionsBuilder<CustomersDbContext>()
                     .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
