@@ -61,7 +61,7 @@ stages:
               version: '5.0.x'
 
           - task: DockerCompose@0
-            displayName: Up dependencies
+            displayName: Up environment
             inputs:
               containerregistrytype: 'Container Registry'
               dockerComposeFile: 'docker-compose.yml'
@@ -76,7 +76,7 @@ stages:
               projects: test/$(projectName).IntegrationTests/$(projectName).IntegrationTests.csproj
 
           - task: DockerCompose@0
-            displayName: Down dependencies
+            displayName: Down environment
             inputs:
               containerregistrytype: 'Container Registry'
               dockerComposeFile: 'docker-compose.yml'
@@ -121,39 +121,29 @@ stages:
         steps:
           - checkout: crmit
 
-          - task: Bash@3
-            displayName: Configure bootstrap
+          - task: UseDotNet@2
             inputs:
-              filePath: 'config.sh'
-              workingDirectory: '$(Build.Repository.LocalPath)'
+              version: '5.0.x'
 
-          - task: Bash@3
-            displayName: Start system
+          - task: DockerCompose@0
+            displayName: Up environment
             inputs:
-              filePath: 'run.sh'
-              arguments: '-t'
-              workingDirectory: '$(Build.Repository.LocalPath)'
+              containerregistrytype: 'Container Registry'
+              dockerComposeFile: 'docker-compose.yml'
+              action: 'Run a Docker Compose command'
+              dockerComposeCommand: 'up'
+              arguments: '-d'
 
-          - task: PowerShell@2
+          - task: DotNetCoreCLI@2
             displayName: Run tests
             inputs:
-              targetType: 'inline'
-              script: |
-                docker build -t crmit-e2e -f test/CRMit.E2E/Dockerfile $(Build.Repository.LocalPath)
-                docker run --name crmit-e2e --network=crmit-services crmit-e2e
-                docker cp crmit-e2e:/testresults ./e2e-results
-                docker rm crmit-e2e
+              command: 'test'
+              projects: test/CRMit.E2ETests/CRMit.E2ETests.csproj
 
-          - task: Bash@3
-            displayName: Stop system
+          - task: DockerCompose@0
+            displayName: Down environment
             inputs:
-              filePath: 'down.sh'
-              workingDirectory: '$(Build.Repository.LocalPath)'
-
-          - task: PublishTestResults@2
-            displayName: Publish test results
-            inputs:
-              testResultsFormat: 'VSTest'
-              testResultsFiles: '**/*.trx'
-              searchFolder: '$(System.DefaultWorkingDirectory)/e2e-results'
-              failTaskOnFailedTests: true
+              containerregistrytype: 'Container Registry'
+              dockerComposeFile: 'docker-compose.yml'
+              action: 'Run a Docker Compose command'
+              dockerComposeCommand: 'down'
