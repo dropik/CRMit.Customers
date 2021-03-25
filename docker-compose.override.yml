@@ -8,7 +8,11 @@ services:
       dockerfile: src/CRMit.Customers/Dockerfile
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+
+      - ASPNETCORE_URLS=https://+
       - CONNECTIONSTRINGS__CUSTOMERSDB=Server=db; Database=CustomersDB; User ID=sa; Password=Password1234;
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=1234
+      - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/crmit.customers.pfx
+    volumes:
+      - ${HOME}/.aspnet/https:/https/
     ports:
-      - 8000:80
+      - 8001:443
