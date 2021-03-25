@@ -71,11 +71,6 @@ namespace CRMit.Customers
                 app.UseSwaggerUI(c => c.SwaggerEndpoint("/swagger/v1/swagger.json", "CRMit.Customers v1"));
             }
 
-            if (env.IsStaging() || env.IsProduction())
-            {
-                app.UseHttpsRedirection();
-            }
-
             app.UseRouting();
 
             app.UseAuthorization();
