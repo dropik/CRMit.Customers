@@ -31,7 +31,7 @@ namespace CRMit.Customers.IntegrationTests
             .ConfigureAppConfiguration(builder =>
             {
                 builder.AddJsonFile("appsettings.json", optional: true)
-                        .AddJsonFile("appsettings.Development.json", optional: true);
+                       .AddJsonFile("appsettings.Development.json", optional: true);
             })
             .UseStartup<Startup>());
 

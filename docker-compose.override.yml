@@ -6,12 +6,9 @@ services:
     build:
       context: .
       dockerfile: src/CRMit.Customers/Dockerfile
-    depends_on:
-      - db
-    networks:
-      - crmit-customers
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
-      - ASPNETCORE_URLS=http://+:80
+      - ASPNETCORE_URLS=http://+
+      - ConnectionString=Server=db;Port=3306;Database=CustomersDB;Uid=customers_service;Pwd=password
     ports:
-      - 8080:80
+      - 8000:80

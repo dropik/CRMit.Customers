@@ -61,7 +61,7 @@ stages:
               version: '5.0.x'
 
           - task: DockerCompose@0
-            displayName: Up DB container
+            displayName: Up dependencies
             inputs:
               containerregistrytype: 'Container Registry'
               dockerComposeFile: 'docker-compose.yml'
@@ -69,31 +69,19 @@ stages:
               dockerComposeCommand: 'up'
               arguments: '-d'
 
-          - task: PowerShell@2
+          - task: DotNetCoreCLI@2
             displayName: Run tests
             inputs:
-              targetType: 'inline'
-              script: |
-                docker build -t $(containerName)-it -f test/CRMit.Customers.IntegrationTests/Dockerfile $(Build.Repository.LocalPath)
-                docker run --name $(containerName)-it --network=$(containerName) $(containerName)-it
-                docker cp $(containerName)-it:/testresults ./it-results
-                docker rm $(containerName)-it
+              command: 'test'
+              projects: test/$(projectName).IntegrationTests/$(projectName).IntegrationTests.csproj
 
           - task: DockerCompose@0
-            displayName: Down DB container
+            displayName: Down dependencies
             inputs:
               containerregistrytype: 'Container Registry'
               dockerComposeFile: 'docker-compose.yml'
               action: 'Run a Docker Compose command'
               dockerComposeCommand: 'down'
-
-          - task: PublishTestResults@2
-            displayName: Publish test results
-            inputs:
-              testResultsFormat: 'VSTest'
-              testResultsFiles: '**/*.trx'
-              searchFolder: '$(System.DefaultWorkingDirectory)/it-results'
-              failTaskOnFailedTests: true
           
   - stage: build
     displayName: Build
