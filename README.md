@@ -10,9 +10,9 @@ customer data, handles items, purchases and various notifications to customer
 Microservice responsible for Customers resource in CRMit REST API v1.
 
 ## Getting Started
-For demonstration purposes, composing is made via docker-compose. To start microservice, run  
+To start the service using database {Server}, {Port}, {DatabaseName}, {User} and {Password}, run
 ```cmd
-> run.cmd
+> docker run -e "ASPNETCORE_URLS=http://+" -e "ConnectionString=Server={Server};Port={Port};Database={DatabaseName};Uid={User};Pwd={Password}" -p 8000:80 -d dropik/crmit-customers:latest
 ```
 
 # REST API Resource: Customers
