@@ -12,7 +12,7 @@ Microservice responsible for Customers resource in CRMit REST API v1.
 ## Getting Started
 To start the service using database {Server}, {Port}, {DatabaseName}, {User} and {Password}, run
 ```cmd
-> docker run -e "ASPNETCORE_URLS=http://+" -e "ConnectionString=Server={Server};Port={Port};Database={DatabaseName};Uid={User};Pwd={Password}" -p 8000:80 -d dropik/crmit-customers:latest
+> docker run -e "ASPNETCORE_URLS=http://+" -e "DB__SERVER={Server}" -e "DB__PORT={Port}" -e "DB__DATABASE={DatabaseName}" -e "DB__USER={User}" -e "DB__PASSWORD={Password}" -p 8000:80 -d dropik/crmit-customers:latest
 ```
 
 # REST API Resource: Customers

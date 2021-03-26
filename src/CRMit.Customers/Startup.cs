@@ -57,7 +57,12 @@ namespace CRMit.Customers
 
             services.AddDbContext<CustomersDbContext>(optionsBuilder =>
             {
-                var connectionString = Configuration["ConnectionString"];
+                var server = Configuration["Db:Server"];
+                var port = Configuration["Db:Port"];
+                var database = Configuration["Db:Database"];
+                var user = Configuration["Db:User"];
+                var password = Configuration["Db:Password"];
+                var connectionString = $"Server={server};Port={port};Database={database};Uid={user};Pwd={password}";
                 optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), options =>
                 {
                     options.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
