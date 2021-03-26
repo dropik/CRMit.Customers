@@ -135,7 +135,7 @@ stages:
             displayName: Run tests
             inputs:
               command: 'test'
-              projects: test/CRMit.E2ETests/CRMit.E2ETests.csproj
+              projects: test/CRMit.E2E/CRMit.E2E.csproj
 
           - task: DockerCompose@0
             displayName: Down environment
