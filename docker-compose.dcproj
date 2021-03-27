@@ -16,5 +16,6 @@
     <None Include="docker-compose.yml" />
     <None Include=".dockerignore" />
     <None Include="run.cmd" />
+    <None Include="run.sh" />
   </ItemGroup>
 </Project>
