@@ -24,14 +24,9 @@ To start the service using database with {Server}, {Port}, {DatabaseName}, {User
 | ------------- | ----------- |
 | ASPNETCORE_URLS | Host URLs to use. Consider specifying something like "https://+" to use only https. |
 | CONNECTIONSTRINGS__CUSTOMERSDB | Connection string to a Microsoft SQL Server. Please refer the following documentation https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnection.connectionstring?view=dotnet-plat-ext-5.0 to set your connection string properly. |
-| ASPNETCORE_Kestrel__Certificates__Default__Path | Path to SSL .pfx certificate relative to your */https/* directory (see [Volumes](#Volumes)). |
-| ASPNETCORE_Kestrel__Certificates__Default__Password | Password for SSL .pfx certificate. |
-
-## Volumes
-
-| Mounting point | Description |
-| -------------- | ----------- |
-| /https/ | SSL certificate storage. |
+| ASPNETCORE_Kestrel__Certificates__Default__Path | Path to .pfx or .crt certificate. |
+| ASPNETCORE_Kestrel__Certificates__Default__Password | Password if using .pfx certificate. |
+| ASPNETCORE_Kestrel__Certificates__Default__KeyPath | Path to .key file if using .crt certificate. |
 
 # REST API Resource: Customers
 
