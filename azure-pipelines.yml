@@ -131,6 +131,7 @@ stages:
           - script: |
               mkdir -p ${HOME}/.aspnet/https
               cp $(certificate.secureFilePath) ${HOME}/.aspnet/https/crmit.customers.pfx
+              ls -la ${HOME}/.aspnet/https/
             displayName: Copy certificate to https folder
 
           - task: DockerCompose@0
