@@ -122,6 +122,17 @@ stages:
             inputs:
               version: '5.0.x'
 
+          - task: DownloadSecureFile@1
+            name: certificate
+            displayName: 'Download SSL certificate'
+            inputs:
+              secureFile: 'crmit.customers.pfx'
+
+          - script: |
+              mkdir -p ${HOME}/.aspnet/https
+              cp $(certificate.secureFilePath) ${HOME}/.aspnet/https/crmit.customers.pfx
+            displayName: Copy certificate to https folder
+
           - task: DockerCompose@0
             displayName: Up environment
             inputs:
