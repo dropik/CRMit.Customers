@@ -1,10 +1,11 @@
 using CRMit.Customers.Models;
+using CRMit.Customers.Services;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using NUnit.Framework;
-using System;
 using System.Net;
 using System.Net.Http;
 using System.Net.Http.Json;
@@ -15,20 +16,17 @@ namespace CRMit.Customers.IntegrationTests
     [TestFixture]
     public class CustomersIT
     {
-        private string connectionString;
         private HttpClient client;
 
         [OneTimeSetUp]
         public async Task OneTimeSetup()
         {
-            connectionString = Environment.GetEnvironmentVariable("ConnectionString");
-            await CreateDatabase();
-            
             var server = CreateTestServer();
+            await ExecuteStartupTasks(server);
             client = server.CreateClient();
         }
 
-        private TestServer CreateTestServer() => new(new WebHostBuilder()
+        private static TestServer CreateTestServer() => new(new WebHostBuilder()
             .UseEnvironment("Development")
             .ConfigureAppConfiguration(builder =>
             {
@@ -37,13 +35,13 @@ namespace CRMit.Customers.IntegrationTests
             })
             .UseStartup<Startup>());
 
-        private async Task CreateDatabase()
+        private static async Task ExecuteStartupTasks(TestServer server)
         {
-            using var context = new CustomersDbContext(
-                new DbContextOptionsBuilder<CustomersDbContext>()
-                    .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
-                    .Options);
-            await context.Database.EnsureCreatedAsync();
+            var tasks = server.Services.GetServices<IStartupTask>();
+            foreach (var task in tasks)
+            {
+                await task.ExecuteAsync();
+            }
         }
 
         [SetUp]
