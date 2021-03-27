@@ -2,13 +2,9 @@ version: '3.4'
 
 services:
   db:
-    image: mysql
-    command: --default-authentication-plugin=mysql_native_password
-    restart: always
+    image: mcr.microsoft.com/mssql/server:2019-latest
     environment:
-      - MYSQL_DATABASE=CustomersDB
-      - MYSQL_ROOT_PASSWORD=root
-      - MYSQL_USER=customers_service
-      - MYSQL_PASSWORD=password
+      - ACCEPT_EULA=Y
+      - SA_PASSWORD=Password1234
     ports:
-      - 3306:3306
+      - 1433:1433

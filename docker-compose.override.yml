@@ -9,10 +9,6 @@ services:
     environment:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=http://+
-      - DB__SERVER=db
-      - DB__PORT=3306
-      - DB__DATABASE=CustomersDB
-      - DB__USER=customers_service
-      - DB__PASSWORD=password
+      - CONNECTIONSTRINGS__CUSTOMERSDB=Server=db; Database=CustomersDB; User ID=sa; Password=Password1234;
     ports:
       - 8000:80

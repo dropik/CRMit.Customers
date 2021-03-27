@@ -47,10 +47,10 @@ namespace CRMit.Customers.IntegrationTests
         [SetUp]
         public async Task Setup()
         {
-            var connectionString = "Server=localhost;Port=3306;Database=CustomersDB;Uid=customers_service;Pwd=password";
+            var connectionString = "Server=localhost; Database=CustomersDB; User ID=sa; Password=Password1234;";
             using var context = new CustomersDbContext(
                 new DbContextOptionsBuilder<CustomersDbContext>()
-                    .UseMySql(connectionString, ServerVersion.AutoDetect(connectionString))
+                    .UseSqlServer(connectionString)
                     .Options);
             await context.Database.EnsureDeletedAsync();
             await context.Database.EnsureCreatedAsync();

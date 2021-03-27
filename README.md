@@ -1,18 +1,21 @@
 # CRMit
+
 An example of a CRM system for a generic busyness. Based on microservice architecture. Implemented with ASP.NET Core.
 
 ## Purposes
-As the 'CRM' (Customer Relationship Management) prefix in the name CRMit suggests, this system manages the relationship 
-between the customer itself and the busyness (which in this case is a generic item-selling busyness). It stores 
-customer data, handles items, purchases and various notifications to customer
+
+As the 'CRM' (Customer Relationship Management) prefix in the name CRMit suggests, this system manages the relationship between the customer itself and the busyness (which in this case is a generic item-selling busyness). It stores customer data, handles items, purchases and various notifications to customer
 
 # CRMit.Customers
+
 Microservice responsible for Customers resource in CRMit REST API v1.
 
 ## Getting Started
+
 To start the service using database {Server}, {Port}, {DatabaseName}, {User} and {Password}, run
+
 ```cmd
-> docker run -e "ASPNETCORE_URLS=http://+" -e "DB__SERVER={Server}" -e "DB__PORT={Port}" -e "DB__DATABASE={DatabaseName}" -e "DB__USER={User}" -e "DB__PASSWORD={Password}" -p 8000:80 -d dropik/crmit-customers:latest
+> docker run -e "ASPNETCORE_URLS=http://+" -e "CONNECTIONSTRINGS__CUSTOMERSDB=Server={Server},{Port}; Database={DatabaseName}; User ID={User}; Password={Password};" -p 8000:80 -d dropik/crmit-customers:latest
 ```
 
 # REST API Resource: Customers
