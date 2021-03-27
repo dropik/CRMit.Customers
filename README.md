@@ -152,5 +152,7 @@ Customer input data.
 | instance | string |  | No |
 
 ## Changelog
+### v1.1.0
+- Switched to SQL Server
 ### v1.0.0
-* Added basic CRUD operations on Customers resource.
+- Added basic CRUD operations on Customers resource.
