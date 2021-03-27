@@ -77,7 +77,6 @@ stages:
             inputs:
               containerregistrytype: 'Container Registry'
               dockerComposeFile: 'docker-compose.yml'
-              additionalDockerComposeFiles: 'docker-compose.it.yml'
               action: 'Run a Docker Compose command'
               dockerComposeCommand: 'down'
           
