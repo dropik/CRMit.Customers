@@ -10,8 +10,8 @@ services:
       - ASPNETCORE_ENVIRONMENT=Development
       - ASPNETCORE_URLS=https://+
       - CONNECTIONSTRINGS__CUSTOMERSDB=Server=db; Database=CustomersDB; User ID=sa; Password=Password1234;
-      - ASPNETCORE_Kestrel__Certificates__Default__Password=1234
       - ASPNETCORE_Kestrel__Certificates__Default__Path=/https/crmit.customers.pfx
+      - ASPNETCORE_Kestrel__Certificates__Default__Password=1234
     volumes:
       - ${HOME}/.aspnet/https:/https/
     ports:
