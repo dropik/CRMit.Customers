@@ -24,12 +24,12 @@ namespace CRMit.Customers.Services
                 {
                     var context = scope.ServiceProvider.GetRequiredService<CustomersDbContext>();
                     await context.Database.MigrateAsync();
-                    Console.WriteLine("Connection with MySql established.");
+                    Console.WriteLine("Connection with SQL Server established.");
                     break;
                 }
                 catch (Exception)
                 {
-                    Console.WriteLine("Connection to MySql failed. Retrying...");
+                    Console.WriteLine("Waiting for SQL Server...");
                     Thread.Sleep(5000);
                 }
             }

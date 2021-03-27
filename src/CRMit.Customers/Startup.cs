@@ -24,7 +24,6 @@ namespace CRMit.Customers
 
         public void ConfigureServices(IServiceCollection services)
         {
-
             services.AddControllers();
 
             services.AddSwaggerGen(c =>
@@ -55,13 +54,9 @@ namespace CRMit.Customers
                 c.OperationFilter<OperationFilter>();
             });
 
-            services.AddDbContext<CustomersDbContext>(optionsBuilder =>
+            services.AddDbContext<CustomersDbContext>(options =>
             {
-                var connectionString = Configuration["ConnectionString"];
-                optionsBuilder.UseMySql(connectionString, ServerVersion.AutoDetect(connectionString), options =>
-                {
-                    options.EnableRetryOnFailure(maxRetryCount: 10, maxRetryDelay: TimeSpan.FromSeconds(30), errorNumbersToAdd: null);
-                });
+                options.UseSqlServer(Configuration.GetConnectionString("CustomersDb"));
             });
 
             services.AddStartupTask<DatabaseMigrator>();
