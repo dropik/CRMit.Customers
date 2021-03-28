@@ -9,6 +9,9 @@ jobs:
   nuget:
     name: Publish Nuget package
     runs-on: ubuntu-latest
+    env:
+      PROJECT_NAME: CRMit.Customers
+      PROJECT_PATH: src/$PROJECT_NAME/$PROJECT_NAME.csproj
 
     steps:
       - uses: actions/checkout@v2
@@ -19,13 +22,13 @@ jobs:
           dotnet-version: 5.0.x
 
       - name: Restore
-        run: dotnet restore src/CRMit.Customers/CRMit.Customers.csproj
+        run: dotnet restore $PROJECT_PATH
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore src/CRMit.Customers/CRMit.Customers.csproj
+        run: dotnet build --configuration Release --no-restore $PROJECT_PATH
 
       - name: Publish package
         uses: brandedoutcast/publish-nuget@v2.5.2
         with:
-          PROJECT_FILE_PATH: src/CRMit.Customers/CRMit.Customers.csproj
+          PROJECT_FILE_PATH: $PROJECT_PATH
           NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
