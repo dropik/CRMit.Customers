@@ -29,5 +29,5 @@ jobs:
       - name: Publish package
         uses: brandedoutcast/publish-nuget@v2.5.2
         with:
-          PROJECT_FILE_PATH: src/${PROJECT_NAME}/${PROJECT_NAME}.csproj
+          PROJECT_FILE_PATH: src/${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.csproj
           NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
