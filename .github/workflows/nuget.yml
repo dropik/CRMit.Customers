@@ -1,0 +1,31 @@
+name: Nuget
+
+on:
+  pull_request:
+    branches:
+      - master
+
+jobs:
+  nuget:
+    name: Publish Nuget package
+    runs-on: ubuntu-latest
+
+    - uses: actions/checkout@v2
+
+    - name: Setup dotnet CLI
+      uses: actions/setup-dotnet@v1
+      with:
+        dotnet-version: 5.0.x
+
+    - name: Restore
+      run: dotnet restore src/CRMit.Customers/CRMit.Customers.csproj
+
+    - name: Build
+      run: dotnet build --configuration Release --no-restore src/CRMit.Customers/CRMit.Customers.csproj
+
+    - name: Publish package
+      uses: brandedoutcast/publish-nuget@v2.5.2
+      with:
+        PROJECT_FILE_PATH: src/CRMit.Customers/CRMit.Customers.csproj
+        NUGET_KEY: {{ secrets.NUGET_API_KEY }}
+        
