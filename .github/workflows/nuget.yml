@@ -21,10 +21,10 @@ jobs:
           dotnet-version: 5.0.x
 
       - name: Restore
-        run: dotnet restore src/${PROJECT_NAME}/${PROJECT_NAME}.csproj
+        run: dotnet restore src/$PROJECT_NAME/$PROJECT_NAME.csproj
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore src/${PROJECT_NAME}/${PROJECT_NAME}.csproj
+        run: dotnet build --configuration Release --no-restore src/$PROJECT_NAME/$PROJECT_NAME.csproj
 
       - name: Publish package
         uses: brandedoutcast/publish-nuget@v2.5.2

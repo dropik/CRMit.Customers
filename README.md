@@ -24,7 +24,7 @@ To get HTTPS working, mount a directory with certificates like ```${HOME}/.aspne
 
 | Variable name | Description |
 | ------------- | ----------- |
-| ASPNETCORE_URLS | Host URLs to use. Consider specifying something like "https://+" to use only https. |
+| ASPNETCORE_URLS | Host URLs to use. Consider specifying something like "https://+" to use only HTTPS. |
 | CONNECTIONSTRINGS__CUSTOMERSDB | Connection string to a Microsoft SQL Server. Please refer the following documentation https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnection.connectionstring?view=dotnet-plat-ext-5.0 to set your connection string properly. |
 | ASPNETCORE_Kestrel__Certificates__Default__Path | Path to .pfx or .crt certificate. |
 | ASPNETCORE_Kestrel__Certificates__Default__Password | Password if using .pfx certificate. |
@@ -164,6 +164,10 @@ Customer input data.
 | instance | string |  | No |
 
 ## Changelog
+
+### v1.2.1
+
+- Publishing Nuget package.
 
 ### v1.2.0
 
