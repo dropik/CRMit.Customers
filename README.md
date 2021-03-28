@@ -12,11 +12,23 @@ Microservice responsible for Customers resource in CRMit REST API v1.
 
 ## Getting Started
 
-To start the service using database {Server}, {Port}, {DatabaseName}, {User} and {Password}, run
+To start the service using database with {Server}, {Port}, {DatabaseName}, {User} and {Password}, run
 
 ```cmd
 > docker run -e "ASPNETCORE_URLS=http://+" -e "CONNECTIONSTRINGS__CUSTOMERSDB=Server={Server},{Port}; Database={DatabaseName}; User ID={User}; Password={Password};" -p 8000:80 -d dropik/crmit-customers:latest
 ```
+
+To get HTTPS working, mount a directory with certificates like ```${HOME}/.aspnet/https:/https/``` and specify the appropriate environment variables.
+
+## Environment Variables
+
+| Variable name | Description |
+| ------------- | ----------- |
+| ASPNETCORE_URLS | Host URLs to use. Consider specifying something like "https://+" to use only https. |
+| CONNECTIONSTRINGS__CUSTOMERSDB | Connection string to a Microsoft SQL Server. Please refer the following documentation https://docs.microsoft.com/en-us/dotnet/api/system.data.sqlclient.sqlconnection.connectionstring?view=dotnet-plat-ext-5.0 to set your connection string properly. |
+| ASPNETCORE_Kestrel__Certificates__Default__Path | Path to .pfx or .crt certificate. |
+| ASPNETCORE_Kestrel__Certificates__Default__Password | Password if using .pfx certificate. |
+| ASPNETCORE_Kestrel__Certificates__Default__KeyPath | Path to .key file if using .crt certificate. |
 
 # REST API Resource: Customers
 
@@ -26,10 +38,10 @@ Represents data of a single customer.
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| id | long | Customer's unique number.<br>_Example:_ `123456` | Yes |
-| name | string | Name.<br>_Example:_ `"Ivan"` | Yes |
-| surname | string | Surname.<br>_Example:_ `"Petrov"` | No |
-| email | string (email) | Email address.<br>_Example:_ `"ivan.petrov@example.com"` | Yes |
+| id | long | Customer's unique number.  _Example:_ `123456` | Yes |
+| name | string | Name.  _Example:_ `"Ivan"` | Yes |
+| surname | string | Surname.  _Example:_ `"Petrov"` | No |
+| email | string (email) | Email address.  _Example:_ `"ivan.petrov@example.com"` | Yes |
 
 ## Operations
 
@@ -137,9 +149,9 @@ Customer input data.
 
 | Name | Type | Description | Required |
 | ---- | ---- | ----------- | -------- |
-| name | string | Name.<br>_Example:_ `"Ivan"` | Yes |
-| surname | string | Surname.<br>_Example:_ `"Petrov"` | No |
-| email | string (email) | Email address.<br>_Example:_ `"ivan.petrov@example.com"` | Yes |
+| name | string | Name.  _Example:_ `"Ivan"` | Yes |
+| surname | string | Surname.  _Example:_ `"Petrov"` | No |
+| email | string (email) | Email address.  _Example:_ `"ivan.petrov@example.com"` | Yes |
 
 #### ProblemDetails
 
@@ -152,7 +164,15 @@ Customer input data.
 | instance | string |  | No |
 
 ## Changelog
+
+### v1.2.0
+
+- Added HTTPS support.
+
 ### v1.1.0
-- Switched to SQL Server
+
+- Switched to SQL Server.
+
 ### v1.0.0
+
 - Added basic CRUD operations on Customers resource.
