@@ -21,13 +21,13 @@ jobs:
           dotnet-version: 5.0.x
 
       - name: Restore
-        run: dotnet restore src/${{ env.PROJECT_PATH }}/${{ env.PROJECT_PATH }}.csproj
+        run: dotnet restore src/${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.csproj
 
       - name: Build
-        run: dotnet build --configuration Release --no-restore src/${{ env.PROJECT_PATH }}/${{ env.PROJECT_PATH }}.csproj
+        run: dotnet build --configuration Release --no-restore src/${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.csproj
 
       - name: Publish package
         uses: brandedoutcast/publish-nuget@v2.5.2
         with:
-          PROJECT_FILE_PATH: src/${{ env.PROJECT_PATH }}/${{ env.PROJECT_PATH }}.csproj
+          PROJECT_FILE_PATH: src/${{ env.PROJECT_NAME }}/${{ env.PROJECT_NAME }}.csproj
           NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
