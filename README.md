@@ -1,10 +1,10 @@
 # CRMit
 
-An example of a CRM system for a generic busyness. Based on microservice architecture. Implemented with ASP.NET Core.
+An example of a CRM system for a generic business. Based on microservice architecture. Implemented with ASP.NET Core.
 
 ## Purposes
 
-As the 'CRM' (Customer Relationship Management) prefix in the name CRMit suggests, this system manages the relationship between the customer itself and the busyness (which in this case is a generic item-selling busyness). It stores customer data, handles items, purchases and various notifications to customer
+As the 'CRM' (Customer Relationship Management) prefix in the name CRMit suggests, this system manages the relationship between the customer itself and the business (which in this case is a generic item-selling business). It stores customer data, handles items, purchases and various notifications to customer
 
 # CRMit.Customers
 
