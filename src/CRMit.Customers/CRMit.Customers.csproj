@@ -6,7 +6,9 @@
     <DockerDefaultTargetOS>Linux</DockerDefaultTargetOS>
     <DockerfileContext>..\..</DockerfileContext>
     <DockerComposeProjectPath>..\..\docker-compose.dcproj</DockerComposeProjectPath>
-    <Version>1.0.0-preview</Version>
+    <PackageId>CRMit.Customers</PackageId>
+    <IsPackable>true</IsPackable>
+    <Version>1.2.1</Version>
     <Authors>Daniil Ryzhkov</Authors>
     <Company>Daniil Ryzhkov</Company>
     <Description>Customers microservice for CRMit project.</Description>

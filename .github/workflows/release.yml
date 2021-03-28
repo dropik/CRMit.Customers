@@ -39,10 +39,37 @@ jobs:
           docker push dropik/crmit-customers:${{ steps.last_tag.outputs.tag }}
           docker push dropik/crmit-customers:latest
 
+  nuget:
+    name: Publish Nuget package
+    runs-on: ubuntu-latest
+    env:
+      PROJECT: src/CRMit.Customers/CRMit.Customers.csproj
+
+    steps:
+      - uses: actions/checkout@v2
+
+      - name: Setup dotnet CLI
+        uses: actions/setup-dotnet@v1
+        with:
+          dotnet-version: 5.0.x
+
+      - name: Restore
+        run: dotnet restore $PROJECT
+
+      - name: Build
+        run: dotnet build --configuration Release --no-restore $PROJECT
+
+      - name: Publish package
+        uses: brandedoutcast/publish-nuget@v2.5.2
+        with:
+          PROJECT_FILE_PATH: ${{ env.PROJECT }}
+          NUGET_KEY: ${{ secrets.NUGET_API_KEY }}
+
+
   create-release:
     name: Create Release
-    needs: [push_tag]
     runs-on: ubuntu-latest
+    
     steps:
       - uses: actions/checkout@v2
 
