@@ -155,9 +155,9 @@ stages:
                 echo 'keyUsage = critical, cRLSign, keyCertSign'; \
                 echo 'extendedKeyUsage = serverAuth, clientAuth')
               mkdir -p ${HOME}/.aspnet/https
-              cp localhost.crt ${HOME}/.aspnet/https/
-              cp localhost.key ${HOME}/.aspnet/https/
-              sudo cp localhost.crt /usr/local/share/ca-certificates/
+              cp $PARENT.crt ${HOME}/.aspnet/https/
+              cp $PARENT.key ${HOME}/.aspnet/https/
+              sudo cp $PARENT.crt /usr/local/share/ca-certificates/
               sudo update-ca-certificates
             displayName: Generate SSL certificate
 

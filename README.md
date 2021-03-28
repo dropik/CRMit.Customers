@@ -18,6 +18,8 @@ To start the service using database with {Server}, {Port}, {DatabaseName}, {User
 > docker run -e "ASPNETCORE_URLS=http://+" -e "CONNECTIONSTRINGS__CUSTOMERSDB=Server={Server},{Port}; Database={DatabaseName}; User ID={User}; Password={Password};" -p 8000:80 -d dropik/crmit-customers:latest
 ```
 
+To get HTTPS working, mount a directory with certificates like ```${HOME}/.aspnet/https:/https/``` and specify the appropriate environment variables.
+
 ## Environment Variables
 
 | Variable name | Description |
